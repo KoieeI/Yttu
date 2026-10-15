@@ -7,7 +7,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#05080e">
-<title>三角洲行动 · 黑屋匹配推测系统 v8.4</title>
+<title>三角洲行动 · 黑屋匹配推测系统 v8.5</title>
 <link rel="preconnect" href="https://moligod.com">
 <link rel="dns-prefetch" href="https://moligod.com">
 <style>
@@ -205,9 +205,14 @@ select.ctrl option{background:#0a1119;color:var(--t1)}
 .dim-row{display:flex;align-items:center;gap:9px;padding:6px 8px;border-radius:var(--r-s);border:1px solid transparent;transition:background .18s,border-color .18s}
 .dim-row.touched{background:rgba(49,230,160,.05);border-color:var(--brand-line)}
 .dim-row label{font-size:.76rem;color:var(--t2);min-width:56px;flex-shrink:0;display:flex;align-items:center;gap:4px}
-.dim-row input[type=range]{flex:1;accent-color:var(--brand);min-height:28px;cursor:pointer;min-width:0}
-.dim-row .v{font-size:.82rem;color:var(--brand);min-width:26px;text-align:right;font-weight:700;font-family:var(--mono)}
-.dim-row .unset{font-size:.6rem;color:var(--t4);border:1px solid var(--line2);border-radius:4px;padding:0 3px}
+.dim-row input[type=range]{flex:1 1 90px;accent-color:var(--brand);min-height:28px;cursor:pointer;min-width:70px}
+.dim-row .dim-num{
+  width:52px;flex-shrink:0;background:#080e16;border:1px solid var(--line2);border-radius:var(--r-s);
+  padding:4px 5px;color:var(--t1);font-size:.8rem;text-align:center;font-family:var(--mono);min-height:30px;
+  transition:border-color .18s,box-shadow .18s}
+.dim-row .dim-num:hover{border-color:rgba(125,160,190,.36)}
+.dim-row .dim-num:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(49,230,160,.14);background:#0a1119}
+.dim-row .unset{font-size:.6rem;color:var(--t4);border:1px solid var(--line2);border-radius:4px;padding:0 3px;flex-shrink:0}
 .dim-note{font-size:.69rem;color:var(--t3);margin-top:8px;line-height:1.6}
 
 /* ============================================================
@@ -1139,7 +1144,7 @@ select.ctrl option{background:#0b111f;color:var(--t1)}
 .path-row .pr-count{margin-left:auto;font-size:.72rem;color:var(--brand,#31e6a0);background:rgba(49,230,160,.1);padding:2px 9px;border-radius:20px}
 .path-note{font-size:.74rem;color:var(--warn);margin-top:8px;line-height:1.6}
 
-/* ====================== v8.4 视觉增强 ====================== */
+/* ====================== v8.5 视觉增强 ====================== */
 .hero-top{gap:14px}
 .hero h1 .tag{box-shadow:0 0 18px rgba(49,230,160,.45),0 2px 10px rgba(0,0,0,.4)}
 .hero .sub{max-width:660px}
@@ -1179,14 +1184,14 @@ select.ctrl option{background:#0b111f;color:var(--t1)}
   <div class="hero">
     <div class="hero-top">
       <div>
-        <h1>三角洲行动 · 黑屋匹配推测系统 <span class="tag">v8.4</span></h1>
+        <h1>三角洲行动 · 黑屋匹配推测系统 <span class="tag">v8.5</span></h1>
         <div class="sub">
-          S11「群星」校准 ｜ <b>两轴分离模型 v4.3（阈值按 2026-09 社区拆解口径重标）</b> ｜ 三模式定向拆解 · 单因子归因 · 解锁目标反解 · 历史趋势分析 ｜ 完全离线运行
+          S11「群星」校准 ｜ <b>两轴分离模型 v4.4（阈值按 2026-10 官方公告与社区数据复核重标）</b> ｜ 三模式定向拆解 · 单因子归因 · 解锁目标反解 · 历史趋势分析 ｜ 完全离线运行
         </div>
       </div>
       <div class="hero-meta">
         <span class="pill"><i class="dot"></i>本机存储</span>
-        <span class="pill" id="pillEngine">系统 v8.4</span>
+        <span class="pill" id="pillEngine">系统 v8.5</span>
         <span class="pill pill-copy" id="pillContact" data-copy="2488181261" role="button" tabindex="0" title="点击复制 QQ 号">
           <i class="ic-qq"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#12B7F5" d="M12 2.2c-2.1 0-3.7 1.5-3.7 3.7 0 .9.3 1.6.8 2.2C7.2 9.2 6 11 6 13.2c0 3.2 2.7 5.8 6 5.8s6-2.6 6-5.8c0-2.2-1.2-4-2.1-5.1.5-.6.8-1.3.8-2.2 0-2.2-1.6-3.7-3.7-3.7z"/><ellipse cx="12" cy="13.4" rx="3.5" ry="4" fill="#fff"/><circle cx="10.1" cy="9.2" r="1" fill="#fff"/><circle cx="13.9" cy="9.2" r="1" fill="#fff"/><circle cx="10.3" cy="9.3" r=".45" fill="#15324a"/><circle cx="14.1" cy="9.3" r=".45" fill="#15324a"/><path fill="#ff9c2c" d="M11 10.2h2l-1 .8z"/><path fill="#ff5a5a" d="M7 11.6c1.7 1 3.7 1.5 5 1.5s3.3-.5 5-1.5c-.4 1.2-2.2 2-5 2s-4.6-.8-5-2z"/></svg></i><span class="pill-txt">联系 QQ：2488181261</span>
         </span>
@@ -1448,7 +1453,7 @@ select.ctrl option{background:#0b111f;color:var(--t1)}
         <span class="ic info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2l9 6.5-3.5 11h-11L3 8.5z"/><path d="M12 2v20M3 8.5l18 0"/></svg></span>
         <h2>当前赛季五维能力</h2>
         <div class="hd-act"><button class="btn tiny ghost" type="button" id="btnDimReset">全部复原为未标定</button></div>
-        <div class="hd-tip">默认 50 分视为「未标定」，不参与评分；拖动过的维度才计入。</div>
+        <div class="hd-tip">默认 50 分视为「未标定」，不参与评分；<b>拖动滑块</b>或<b>直接输入数字</b>（0–100）的维度才计入，两种方式实时同步。</div>
       </div>
       <div class="dim-wrap">
         <div class="dim-canvas"><canvas id="radarCanvas" width="270" height="270" aria-label="五维雷达图" role="img"></canvas></div>
@@ -1457,27 +1462,32 @@ select.ctrl option{background:#0b111f;color:var(--t1)}
             <div class="dim-row" data-dim="combat">
               <label for="dimCombat">战斗能力</label>
               <input type="range" id="dimCombat" min="0" max="100" step="1" value="50">
-              <span class="v" id="dimCombatVal">50</span><span class="unset">未标定</span>
+              <input class="dim-num" type="number" id="dimCombatNum" min="0" max="100" step="1" value="50" inputmode="numeric" aria-label="战斗能力直接输入（0-100）">
+              <span class="unset">未标定</span>
             </div>
             <div class="dim-row" data-dim="wealth">
               <label for="dimWealth">财富能力</label>
               <input type="range" id="dimWealth" min="0" max="100" step="1" value="50">
-              <span class="v" id="dimWealthVal">50</span><span class="unset">未标定</span>
+              <input class="dim-num" type="number" id="dimWealthNum" min="0" max="100" step="1" value="50" inputmode="numeric" aria-label="财富能力直接输入（0-100）">
+              <span class="unset">未标定</span>
             </div>
             <div class="dim-row" data-dim="search">
               <label for="dimSearch">搜索能力</label>
               <input type="range" id="dimSearch" min="0" max="100" step="1" value="50">
-              <span class="v" id="dimSearchVal">50</span><span class="unset">未标定</span>
+              <input class="dim-num" type="number" id="dimSearchNum" min="0" max="100" step="1" value="50" inputmode="numeric" aria-label="搜索能力直接输入（0-100）">
+              <span class="unset">未标定</span>
             </div>
             <div class="dim-row" data-dim="coop">
               <label for="dimCoop">合作能力</label>
               <input type="range" id="dimCoop" min="0" max="100" step="1" value="50">
-              <span class="v" id="dimCoopVal">50</span><span class="unset">未标定</span>
+              <input class="dim-num" type="number" id="dimCoopNum" min="0" max="100" step="1" value="50" inputmode="numeric" aria-label="合作能力直接输入（0-100）">
+              <span class="unset">未标定</span>
             </div>
             <div class="dim-row" data-dim="survival">
               <label for="dimSurvival">生存能力</label>
               <input type="range" id="dimSurvival" min="0" max="100" step="1" value="50">
-              <span class="v" id="dimSurvivalVal">50</span><span class="unset">未标定</span>
+              <input class="dim-num" type="number" id="dimSurvivalNum" min="0" max="100" step="1" value="50" inputmode="numeric" aria-label="生存能力直接输入（0-100）">
+              <span class="unset">未标定</span>
             </div>
           </div>
           <div class="dim-note" id="dimNote">未标定时，五维对应的战斗分／搜索分／生存分不参与两轴计分，也不会触发「搜·打·撤三维同向偏离」。</div>
@@ -1509,7 +1519,7 @@ select.ctrl option{background:#0b111f;color:var(--t1)}
           <button class="btn tiny ghost" type="button" id="btnImportText">粘贴导入</button>
           <input type="file" id="fileImport" accept="application/json,.json,.txt,text/plain" hidden>
         </div>
-        <div class="hd-tip">记录仅存于本机浏览器存储，上限 300 条自动淘汰最旧。「详情」按当前算法重算完整报告，「载入」把当时输入回填录入页。</div>
+        <div class="hd-tip">记录仅存于本机浏览器存储，上限 300 条自动淘汰最旧。「详情」按当前算法重算完整报告，「载入」把当时输入回填录入页。v8.5 起自动归集旧版（v8.4 及更早）历史记录；旧版导出的 JSON 也可直接「导入文件 / 粘贴导入」迁回。</div>
       </div>
       <div class="hs-grid" id="histStat"></div>
 
@@ -2075,13 +2085,14 @@ select.ctrl option{background:#0b111f;color:var(--t1)}
     <div class="mech-hint-card">
       <h3>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 8v4l3 2"/><circle cx="12" cy="12" r="9"/></svg>
-        v8.4 更新日志
+        v8.5 更新日志
       </h3>
       <ul>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><b>缩放自定义输入</b>：挂载窗口缩放不再仅依赖 +/- 按钮，新增可直接输入百分比（20%–300%、步进 5%）的输入框，聚焦即生效，缩放更精准。</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><b>数据分析占位符清空</b>：移除表单中「如 1.00」等示例文案，输入框默认留空，录入更清爽、不再产生误导。</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><b>机制与提示文案重写</b>：本页签全部说明重写，语句更通顺、口径更严谨，挂载说明、改枪码、黑潮爆破与功能总览一站式可读。</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><b>纯窗口挂载不变</b>：依旧仅用 iframe 嵌入 moligod，零抓取、零解析、零缓存；刷新同步保持有效，源站更新即时呈现。</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><b>数据源全面复核（2026-10）</b>：结合官方 9/26 周年庆更新公告与最新社区实测重新校准——爆率基数（普通 0.08%／机密 0.35%／绝密 0.8%）、每日额度（800/1100/500 万）、F_base 五系数权重与四档分级均经多源交叉验证；新增「隐藏爆率条」「S11 匹配口径」「同点对照实测」等来源条目，冲突项逐条登记。</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><b>五维支持直接输入</b>：五维能力在原有拖拉滑块之外新增数字输入框，两种方式实时同步；直接输入同样标记「已标定」并参与两轴计分，适合对照面板读数精确录入。</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><b>历史记录跨版本保留</b>：历史存储升级为新键并内置迁移——首次加载自动归集旧版（v8.4 及更早）记录且旧键原样保留作备份；旧版导出的 JSON 可直接导入新版本（自动补算缺失字段），换设备也不用丢历史。</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><b>分析逻辑微调</b>：低压轴新增「低战备压制」佐证（2026-10 同点对照实测）；组队贡献权重按 S11 官方匹配口径上调；跑刀/糖号口径冲突重新登记，仍取保守方向。</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><b>纯窗口挂载不变</b>：依旧仅用 iframe 嵌入 moligod，零抓取、零解析、零缓存；全部计算与存储仍在本机完成。</span></li>
       </ul>
     </div>
 
@@ -2130,7 +2141,7 @@ select.ctrl option{background:#0b111f;color:var(--t1)}
     <div class="card">
       <div class="card-hd">
         <span class="ic gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg></span>
-        <h2>v8.4 建模口径与已知局限</h2>
+        <h2>v8.5 建模口径与已知局限</h2>
       </div>
       <div class="mech" id="mechLimits"></div>
     </div>
@@ -2531,17 +2542,22 @@ select.ctrl option{background:#0b111f;color:var(--t1)}
 /* ============================================================
    SECTION: analysis engine v6 (纯逻辑，无 DOM 依赖，可单独测试)
    ------------------------------------------------------------
-   三角洲行动 · 黑屋匹配推测引擎 v4.3 / 系统 v8.4
-   在 v4.1（两轴分离）之上的方法论改动：
-     1. 五维默认 50 视为「未标定」，不参与评分（v4.1 会把默认值当真实数据）
-     2. 输入覆盖率改为按轴权重加权计算，缺失关键项的惩罚更贴近实际影响
-     3. 判定阈值随样本量与覆盖率动态收紧（样本越少越不容易被判黑屋）
-     4. 归因从「轴内分值排序」升级为「留一法（leave-one-out）边际贡献」
-     5. 新增「解锁目标反解」：单变量二分搜索，给出把判定降档所需的最小改动
-     6. 新增三模式定向拆解：爆率池隔离，逐模式给出结论
-     7. 组队方式（连坐）与近期波动计入评分；体感出货只参与一致性校验，不进评分
-     8. 修正 v4.1 已知问题：轴聚合重复排序、权重双份定义、标签样式类名不匹配、
-        周年庆活动窗口未校验年份、单局带出口径表述错误
+   三角洲行动 · 黑屋匹配推测引擎 v4.4 / 系统 v8.5
+   在 v4.3（2026-09 社区拆解口径重标）之上的 v8.5 改动：
+     1. 数据源按 2026-10 最新官方公告（2026-09-26 周年庆更新公告）与社区实测
+        全面复核：爆率基数、每日额度、F_base 五系数权重、四档分级均经多源交叉验证，
+        新增来源条目与冲突登记（见 SOURCES / DISPUTES）
+     2. 低压轴补强「低战备压制」证据：2026-10 社区同点对照实测（零战备跑刀号 vs
+        六套猛攻号同一容器出货差异），gear 规格表低端阈值上调
+     3. 组队贡献（coop）高压轴权重按 S11 官方匹配口径（同段位、同场均表现，
+        含助攻与团队贡献）由 0.02 上调至 0.04
+     4. 跑刀 / 糖号口径冲突重新登记：2026-10 社区「糖号攻略」称压低战斗分 + 拉满
+        搜索分可得高爆福利局，与 S10 标签口径（潜行跑刀 -20%~40%）直接冲突，
+        仍取保守方向并逐条登记
+     5. 事件系数注释更新：二周年庆窗口以官方公告口径（2026-09-26 00:00 –
+        2026-10-15 24:00）为准；群星守望（10-16 上线）为 PvE 玩法，不纳入爆率建模
+     6. 新增「隐藏爆率条（按模式独立、离线恢复、换模式重置）」来源条目，
+        用于解释体感波动，不改动评分权重
    全部阈值均为社区实测 / 第三方拆解口径，非官方公开参数。
    ============================================================ */
 var Analyzer = (function(){
@@ -2562,7 +2578,7 @@ var Analyzer = (function(){
     },
     bw: { base:0.40, raid:0.35, loss:0.15, event:0.03 },
     minGames: 100,
-    season: { s11Start:'2026-09-04', s11IntlStart:'2026-09-08', anniversaryStart:'2026-09-26', anniversaryEnd:'2026-10-15' },
+    season: { s11Start:'2026-09-04', s11IntlStart:'2026-09-08', anniversaryStart:'2026-09-26', anniversaryEnd:'2026-10-15', stargazeStart:'2026-10-16' },
     // 判定阈值基准（v4.1 固定 58/40，v6 会按置信度上浮）
     th: { hi:58, mid:40 },
     // 组队连坐：组排按队内最高隐藏分匹配，三排全局爆率再降 18%
@@ -2594,18 +2610,18 @@ var Analyzer = (function(){
       why:'取时效更新的后者，并在报告中标注口径截止时间。' },
     { topic:'五维默认值处理', values:'按 50 分计入（v4.1）／未标定不计入（v6）', taken:'未标定不计入',
       why:'面板并未公开五维读数，默认 50 属占位而非观测值，计入会系统性稀释归因。' },
-    { topic:'KD 对爆率的方向（本次重标关键）', values:'「KD 越高爆率越低」（社区攻略口径，广泛流传）／S8 社区拆解称已辟谣（未获官方证实），且 KD≥1.8 属优质账号、基础爆率 +50%~80%（社区拆解整理 2026-07-07、2026-04-12）',
+    { topic:'KD 对爆率的方向（本次重标关键）', values:'「KD 越高爆率越低」（社区攻略口径，广泛流传；2026-10 代练通/自媒体仍持此说并给出 0.1-0.3「红利区」）／S8 社区拆解称已辟谣（未获官方证实），且 KD≥1.8 属优质账号、基础爆率 +50%~80%（社区拆解整理 2026-07-07、2026-04-12）',
       taken:'KD 只抬高压轴；低爆轴权重由 0.10 降至 0.01，且曲线随 KD 升高而下降',
-      why:'两份社区拆解口径一致且明确辟谣，社区说法属把「高压局体感差」误当成「降爆率」。v4.2 沿用了社区方向，本次按社区拆解口径反转。' },
+      why:'两份社区拆解口径一致且明确辟谣，社区说法属把「高压局体感差」误当成「降爆率」。v4.2 沿用了社区方向，v4.3 起按社区拆解口径反转；2026-10 复核时旧说法仍在自媒体流传，维持反转结论并在此登记。' },
     { topic:'击杀/战斗活跃度对爆率的方向', values:'社区：打架多→被制裁→降爆率／官方：击杀玩家 +8%~15%、3000+伤害 +12%、击败精英AI +30%~50%（局内表现系数权重 35%）',
       taken:'战斗分转为爆率加分项，只在长期过低（避战）时扣分',
       why:'S6 起机制从「亏损补偿」重构为「行为绑定」，官方三份文档（2026-04-12／07-05／07-15）一致给出正向加分；旧口径是重构前的逻辑。' },
     { topic:'仓库资产与爆率', values:'「资产异常暴涨触发收益平衡」（旧拆解）／社区拆解称已辟谣（未获官方证实）：仓库总资产、氪金金额不影响爆率（2026-04-12）',
       taken:'财富分低爆轴权重由 0.07 降至 0.05 且曲线压平；压制证据改由「带出收益效率 + 每日额度」承担',
       why:'社区拆解称已辟谣（未获官方证实）存量资产；但同时把「账号综合身价」列为对局强度四维之一（2026-06-25），故资产主要影响匹配而非出货。' },
-    { topic:'跑刀/搜索型的爆率', values:'「跑刀型大红爆率最高，S8 加强」（公众号实测 2026-05-28）／「跑刀型基础系数降低 30%、S8 后空装跑刀属消极」（社区拆解整理 2026-04-12／07-15）',
+    { topic:'跑刀/搜索型的爆率', values:'「跑刀型大红爆率最高，S8 加强」（公众号实测 2026-05-28）／「跑刀型基础系数降低 30%、S8 后空装跑刀属消极」（社区拆解整理 2026-04-12／07-15）／「S11 糖号攻略：KD 0.4-0.7 + 命中率 10-20% + 撤离 30% + 搜遍全场 = 高爆福利局」（头条养号攻略 2026-10）',
       taken:'搜索分本身按加分项处理（大保险箱+20%等），但「低击杀 + 短时长」的跑刀画像仍按消极限流',
-      why:'两者其实不矛盾：官方压的是「消极行为」，社区看到的「跑刀出货多」来自行为分中的搜索加分与额度未耗尽。故拆开建模，不再让高搜索分直接抬低爆轴。' },
+      why:'三者其实不矛盾：官方压的是「消极行为」，社区看到的「跑刀出货多」来自行为分中的搜索加分与额度未耗尽；2026-10 糖号攻略与 2026-04 拆解在「低战斗分是否直接抬爆率」上直接对立，且同点对照实测显示零战备跑刀号容器出货显著低于猛攻号，故拆开建模，不让高搜索分直接抬低爆轴。' },
     { topic:'匹配权重构成', values:'「近10局70% + 赛季30%」（B站实测 2025-10-24，自媒体）／社区资料仅给出四维隐藏分构成，未公布比例',
       taken:'采信方向不采信数值：近10局口径的战斗活跃度分取高压轴最高权重（0.24），长期 KD 降至 0.16',
       why:'自媒体比例不可作为事实数据引用，但其方向与官方「S11 更精准匹配同段位、同场均表现」一致，故只用于排序而非赋值。' }
@@ -2625,7 +2641,7 @@ var Analyzer = (function(){
       [4.00,20, 80,'稳定盈利判定 → 锁爆率'],
       [8.00,26, 95,'工资池严重超标'] ] },
 
-    kd: { src:'F_base 内权重0.3／优质门槛KD≥1.8／绝密2.3+高手／俱乐部5.9／强度隐藏分与KD无直接关联(官方2026-07-28)／S8辟谣「KD越高爆率越低」(官方2026-07-07)', anchors:[
+    kd: { src:'F_base 内权重0.3／优质门槛KD≥1.8／绝密2.3+高手／俱乐部5.9／强度隐藏分与KD无直接关联(官方2026-07-28)／S8辟谣「KD越高爆率越低」(官方2026-07-07)；2026-10 自媒体仍流传「KD越高爆率越低、红利区0.1-0.3」，已登记为冲突项', anchors:[
       [0.20, 5, 44,'"送分号"（KD<0.5 属黑屋账号画像，基础爆率压制70%+）'],
       [0.50, 5, 40,'低迷档（撤离率与赚损比同低时判黑屋账号）'],
       [0.75, 7, 10,'均衡标签区间，享受标准爆率'],
@@ -2686,7 +2702,7 @@ var Analyzer = (function(){
       [85.0,18, 20,'身价高位：影响匹配强度档，不直接压爆率'],
       [100, 24, 24,'极高（仅人机局每日限进2局等次要约束）'] ] },
 
-    search: { src:'大保险箱+20%／小保险箱+12%／航空箱+8%（加分项，边际递减）；只摸保险不搜图→活跃度归零限流-20%~40%；低值容器每10个-3%；跑刀型口径存在冲突', anchors:[
+    search: { src:'大保险箱+20%／小保险箱+12%／航空箱+8%（加分项，边际递减）；只摸保险不搜图→活跃度归零限流-20%~40%；低值容器每10个-3%；跑刀型口径存在冲突；2026-10「糖号攻略」称高搜索+低战斗=高爆福利局，与S10标签口径冲突，取保守方向', anchors:[
       [25.0, 8, 56,'过低（只摸保险不搜图 → 活跃度归零，限流池）'],
       [40.0, 8, 46,'偏低（容器数不足，正向分拿不满）'],
       [55.0,12, 22,'正常'],
@@ -2721,9 +2737,9 @@ var Analyzer = (function(){
       [11.0,22, 90,'超日额度概率高'],
       [20.0,26, 96,'严重超标：红品可降至0.05%以下'] ] },
 
-    gear: { src:'战备值=分房第一筛选门槛；30万以下易匹跑刀；双20万+主武器强制满装局；S8「空装跑刀属消极行为，基础系数-30%」', anchors:[
-      [5.00,10, 26,'裸装跑刀（S8 起按消极行为处理，基础系数-30%）'],
-      [30.0,14, 14,'低战备（易匹跑刀队友/低装局）'],
+    gear: { src:'战备值=分房第一筛选门槛；30万以下易匹跑刀；双20万+主武器强制满装局；S8「空装跑刀属消极行为，基础系数-30%」；2026-10 社区同点对照实测进一步支持低战备压制', anchors:[
+      [5.00,10, 32,'裸装跑刀（S8 起按消极行为处理，基础系数-30%；2026-10 同点对照实测：同一容器零战备号十摸九空，六套猛攻号明显更高）'],
+      [30.0,14, 16,'低战备（易匹跑刀队友/低装局；2026-10 实测支持低战备压制）'],
       [78.0,42,  8,'中档战备，匹配池跨度大'],
       [150.0,66, 5,'高战备，锁定高强度满装局'],
       [300.0,88, 6,'满改六套级：强制高强度池（档位而非异常）'] ] }
@@ -2884,7 +2900,10 @@ var Analyzer = (function(){
     function iso(d){ return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
     var today = iso(now);
     if (today >= CAL.season.anniversaryStart && today <= CAL.season.anniversaryEnd){
-      e *= 1.5; note.push('二周年庆活动期（' + CAL.season.anniversaryStart + '–' + CAL.season.anniversaryEnd + '）：曼德尔砖返场+保险小队，全局爆率约+30%~100%，此处保守取+50%');
+      e *= 1.5; note.push('二周年庆活动期（' + CAL.season.anniversaryStart + '–' + CAL.season.anniversaryEnd + '，官方 2026-09-26 更新公告口径）：曼德尔砖返场+保险小队，全局爆率约+30%~100%，此处保守取+50%');
+    }
+    if (today >= CAL.season.stargazeStart){
+      note.push('群星守望（PvE 玩法，官方公告 2026-10-16 上线）：门票制且局内物资不带出，不属于烽火地带爆率池，本工具不建模、不计系数');
     }
     if (today >= CAL.season.s11Start && today <= CAL.season.s11Start.slice(0,8) + '22' && phase === 'early'){
       note.push('S11「群星」生效期（国服 2026-09-04 / 国际服 09-08 起）：同段位同场均匹配；“前五局高校准”为社区口径，未获官方证实');
@@ -2939,16 +2958,18 @@ var Analyzer = (function(){
   }
 
   /* ---------- 权重（唯一定义处） ---------- */
-  /* 权重按 2026-09 复核的社区拆解整理口径重标（v4.3）：
+  /* 权重按 2026-10 复核口径重标（v4.4，在 v4.3 基础上微调）：
      高压轴对齐「对局强度四维」——战备分 / 战斗活跃度分 / 长期赚损比 / 账号综合身价
        （社区拆解整理《收益、损耗与补偿的底层原理》2026-06-25）；
        另社区实测称匹配权重约「近10局70% + 赛季30%」（B站专栏2025-10-24，属定性参考），
        故近10局口径的战斗活跃度分（五维战斗）取最高权重，长期 KD 相应下调。
+       v4.4：S11 官方口径明示匹配参考「近期 KD、场均击杀、助攻数、团队贡献」
+       （排位规则优化公告 + 社区解读 2026-09/10），合作分（coop）权重由 0.02 上调至 0.04。
      低爆轴对齐「爆率四组成」——基础爆率 / 补偿爆率 / 正向分 / 用户画像，
        其中压制证据集中在收益侧（额度闸门 + 收益效率 + 赚损比 + 稳定盈利）与消极行为侧
        （速死、避战速撤、只摸保险），而非击杀本身。 */
   var RAW_P = { combat:0.24, kd:0.16, hit:0.12, prec:0.10, gear:0.10, profit:0.07,
-                evac:0.05, kdOff:0.04, surv:0.03, time:0.03, wealth:0.02, coop:0.02,
+                evac:0.05, kdOff:0.04, surv:0.03, time:0.03, wealth:0.02, coop:0.04,
                 search:0.02, yld:0.02 };
   var RAW_D = { yld:0.24, profit:0.22, evac:0.16, time:0.10, search:0.06, coop:0.04,
                 wealth:0.05, hit:0.03, combat:0.03, prec:0.02, surv:0.02, kd:0.01,
@@ -3243,7 +3264,7 @@ var Analyzer = (function(){
     var seEvac = (n > 0 && has(data.evacRate)) ? Math.sqrt((data.evacRate/100)*(1-data.evacRate/100)/n)*100 : null;
 
     var out = {
-      version:'v4.3', engine:'v7.7',
+      version:'v4.4', engine:'v8.5',
       pressure: Math.round(pressure), suppress: Math.round(suppress), composite: Math.round(composite),
       verdictKey: vKey, verdict: vName, pool: pool, poolTone: poolTone, sev: sev,
       thresholds: TH, trust: trust, coverage: coverage, sampleF: sampleF,
@@ -3540,7 +3561,13 @@ var Analyzer = (function(){
     { tone:'g', name:'标签分池与赛季重置', text:'S10 引入对局标签（猛攻攻坚／潜行跑刀），后者大红基础爆率下调 20%-40%；S11「群星」2026-09-04（国际服 09-08）上线，新增纵横巅峰赛与长弓溪谷扩容；<b>“每赛季隐藏分重置为上赛季 60%、前五局承担约 70% 校准”未找到官方出处，本工具仅作为赛季初模型参数</b>。', src:'社区拆解 2026-07/08 + 2026-09 复核（未获官方证实项已标注）' },
     { tone:'o', name:'地图更正', text:'潮汐监狱为 <b>S5「破壁」(2025-07-03)</b> 上线的绝密专属图（行动等级≥33，战备门槛后由 78 万下调至 24.75 万），并非 S11 新图；本工具早期版本标注有误，已更正。', src:'版本公告核对' },
     { tone:'v', name:'组队连坐（v6 新入模）', text:'组排按队内最高隐藏分/KD 匹配（不取平均）：双排高压轴 +4、爆率 ×0.96；三排 +6、全局爆率 ×0.82；单排不计。v4.1 未建模此项。', src:'社区拆解整理 + 社区实测' },
-    { tone:'v', name:'当前活动窗口', text:'2026-09-26 起进入二周年庆（至 10-15），猩红曼德尔砖返场（普通保底1格小红／机密4格红／绝密6格大红）+ 哈夫克保险小队空投，属全局爆率正向加成，按「特殊事件系数 ×1.5（保守取 +50%）」计入，并按完整日期比较而非月日。', src:'活动公告 + 本工具取值' }
+    { tone:'v', name:'当前活动窗口', text:'2026-09-26 起进入二周年庆（至 10-15），猩红曼德尔砖返场（普通保底1格小红／机密4格红／绝密6格大红）+ 哈夫克保险小队空投，属全局爆率正向加成，按「特殊事件系数 ×1.5（保守取 +50%）」计入，并按完整日期比较而非月日。', src:'活动公告 + 本工具取值' },
+    { tone:'v', name:'2026-10 数据源全面复核（v8.5）', text:'对照官方 2026-09-26 周年庆更新公告与多个社区攻略站重新核验：基础爆率（普通红 0.08%／金 1.2%，机密 0.35%／3.8%，绝密 0.8%／7.5%）、单局硬上限（红 3.2%／金 12%）、每日额度（普通 800 万／高活跃 1100 万／新手 500 万，达额红金骤降 70%-90%，凌晨 5 点重置）、F_base 五系数（KD 0.3／赚损比 0.3／撤离率 0.2／活跃天数 0.1／赛季任务 0.1）与四档分级（优质 ≥1.5 +50%~80%／标准 1.0-1.5／低迷 0.5-1.0 -20%~40%／黑屋 <0.5 压制 70%+）——各源数值完全一致，视为口径稳定，本工具基数不变。', src:'官方 2026-09-26 更新公告（游民星空转录）+ 社区攻略站交叉验证 2026-10' },
+    { tone:'o', name:'官方 2026-09-26 周年庆更新公告', text:'活动周期 9月26日 00:00 – 10月15日 24:00（不停机更新）。核心福利：限时三角券保底 3900；猩红曼德尔砖全地图刷新（破译需 5 分钟、手动取砖带出），普通保底 1 格小红／机密 4 格红／绝密 6 格大红；哈夫克保险小队多轮空投，盒子爆率对标大保险级；神秘折扣商店最低 5 折。本工具的事件系数即按该窗口取值。', src:'《三角洲行动》9月26日更新公告 2026-09-26' },
+    { tone:'o', name:'群星守望（10-16 上线，未建模）', text:'官方公告的全新 PvE 玩法「群星守望」2026-10-16 上线：门票 50 万哈夫币起，统一 3×3 安全箱与免费万能钥匙，局内产出专属收集品且不带出，独立段位（士兵→骑士→主教→堡垒→纵横王权）。因其不属烽火地带爆率池，本工具不建模、不计系数，仅在此登记以免误用。', src:'官方公告 + 社区玩法解析 2026-09/10' },
+    { tone:'g', name:'隐藏爆率条与模式轮换', text:'社区拆解称每模式存在独立「爆率条」：赛季初满格、随搜索次数衰减、离线缓慢恢复、切换模式可重置对应爆率条；绝密局后期（最后 10 分钟）存活越少爆率越高，后期搜保险出货率约为开局 2~3 倍。该机制解释了大量「单局不出货」体感，本工具只在结论提示中引用，不改变评分权重。', src:'游侠网《万金泪冠刷新概率分析》2026-02 + 社区拆解整理 2026-07-28' },
+    { tone:'g', name:'S11 匹配口径（官方）', text:'S11「群星」排位匹配优化：不再只看段位，结合近期 KD、场均击杀、助攻数、团队贡献等综合数据匹配同段位、同场均表现玩家；新增队友异常补偿（队友开局短时离线不扣段位分）。该口径支持高压轴把「战斗活跃度分」取最高权重、并小幅上调合作分权重。', src:'S11 排位规则优化公告 + 社区解读 2026-09/10' },
+    { tone:'o', name:'2026-10 社区对照实测与体感', text:'同地图同容器对照：零战备白装跑刀号「十摸九空」，六套高战备猛攻号同点明显更高——支持低战备压制假设（已用于 gear 规格表）；单局带出触及系统阈值即显著压低高价值爆率；腾讯频道 2026-10-02 出现集中「黑屋／爆率调低」投诉帖。以上为定性参考，未获官方证实，仅作辅证不单独触发判定。', src:'社区实测帖 + 腾讯频道玩家反馈 2026-10' }
   ];
 
   var LIMITS = [
@@ -3550,9 +3577,12 @@ var Analyzer = (function(){
     { tone:'g', name:'五维口径', text:'面板并不直接给出五维读数，滑块值属主观标定。v6 起未标定的维度一律不参与评分，避免默认值污染归因；标定后判定会更接近真实画像。' },
     { tone:'g', name:'置信度联动', text:'判定阈值不再是固定 58：按加权覆盖率与样本量在 58–72 区间动态上浮，样本越少越保守，宁可漏判不误判。翻转与否还会经 ±8% 扰动重算验证。' },
     { tone:'', name:'赛季阶段精度', text:'赛季初/中/末已入模（×1.25／×0.85），但仍缺「距赛季更新第几天」的精确输入，前五局 70% 校准权重无法逐局还原。' },
-    { tone:'v', name:'v4.3 权重为人工标定', text:'两轴权重由「来源归因方向 + 社区五系数占比」人工推导，不是对真实服务端做回归得到的：官方从未公布任何权重数值，社区也无可复现的大样本。因此权重排序的意义大于绝对分值，判定档位切换比分数本身更可靠。' },
+    { tone:'v', name:'v4.4 权重为人工标定', text:'两轴权重由「来源归因方向 + 社区五系数占比」人工推导，不是对真实服务端做回归得到的：官方从未公布任何权重数值，社区也无可复现的大样本。因此权重排序的意义大于绝对分值，判定档位切换比分数本身更可靠。v4.4 仅按 S11 官方匹配口径把合作分由 0.02 上调至 0.04，其余不变。' },
     { tone:'v', name:'未采集的模型权重项', text:'活跃天数与赛季任务完成度（F_base 各占 0.1）、击败精英AI 次数、有效伤害量、残血撤离、开容器数与品质、投喂与丢弃返还、凌晨时段与连续未出货局数——这些社区拆解中提及会加/扣爆率的行为项，面板读不到，本工具一律不臆造输入。' },
     { tone:'g', name:'爆率模拟页的边界', text:'「爆率模拟」页只持有录入快照的深拷贝，用于观察「改一个变量会怎样」，它<b>不回写录入页、不写入历史记录、不进入历史分析统计</b>。因此模拟得到的好结果不代表账号已降档——必须回到「数据分析」页录入真实数据再判定。' },
+    { tone:'g', name:'五维双输入方式（v8.5）', text:'五维支持「拖拉滑块」与「直接输入数字」两种录入口径，二者实时同步、等价参与计分：任一方式操作过即标记「已标定」，未操作过一律按 50 分占位、不参与评分。直接输入适合对照面板读数精确录入，但不改变「面板不公开五维读数、标定值属主观」这一根本局限。' },
+    { tone:'g', name:'历史记录跨版本保留（v8.5）', text:'v8.5 起历史记录写入新键 delta_blackroom_history_v85，首次加载自动归集旧版（v8.4 及更早）记录且旧键原样保留作备份；在别的设备上用旧版「导出 JSON」、新版本「导入文件 / 粘贴导入」即可迁回。导入时缺结论字段的旧记录会按当前算法补算，可能与当时的判定有细微出入。' },
+    { tone:'o', name:'群星守望未建模（v8.5）', text:'2026-10-16 上线的 PvE 玩法「群星守望」有独立门票、安全箱与收集品体系，局内物资不带出，不属于烽火地带爆率池。本工具不对其建模，请勿用烽火地带的结论套用该玩法。' },
     { tone:'v', name:'不改变游戏结果', text:'本工具只做数据分析，不提供、也不应对外传播任何修改游戏数据的手段；请遵守游戏用户协议。' }
   ];
 
@@ -4178,7 +4208,7 @@ var UI = (function(){
   /* 纯文本报告（复制用） */
   function plainText(data, r){
     var dv = r.derived, L = [];
-    L.push('三角洲行动 · 黑屋匹配推测（v7.7 / 引擎 ' + r.version + '）');
+    L.push('三角洲行动 · 黑屋匹配推测（v8.5 / 引擎 ' + r.version + '）');
     L.push('时间：' + new Date().toLocaleString('zh-CN'));
     L.push('判定：' + r.verdict + '｜匹配池：' + r.pool);
     L.push('综合 ' + r.composite + '（阈值 ' + r.thresholds.hi.toFixed(0) + '，边缘 ' + r.thresholds.mid.toFixed(0) + '）｜高压轴 ' + r.pressure + '｜低爆轴 ' + r.suppress);
@@ -4219,11 +4249,16 @@ var UI = (function(){
    SECTION: history store
    ============================================================ */
 var History = (function(){
-  /* 键名用运行期拼接，避免任何非 ASCII 字符混入；OLD_KEYS 同时兼容
-     v5 及本工具早期版本里那个含省略号字符的旧键，保证已有记录不丢。 */
-  var KEY = ['delta','blackroom','history','v6'].join('_');
+  /* 键名用运行期拼接，避免任何非 ASCII 字符混入。
+     v8.5 起历史记录写入新键 delta_blackroom_history_v85；
+     OLD_KEYS 同时兼容 v8.4 及更早版本（v6/v3 与含省略号字符的旧键），
+     首次加载自动把旧记录按 id 去重合并进新键（新键已有记录时也合并），
+     旧键原样保留作备份，保证同设备升级、以及「旧版导出 JSON → 新版导入」都不丢历史。 */
+  var KEY = ['delta','blackroom','history','v85'].join('_');
+  var MIGRATED_KEY = ['delta','blackroom','history','migrated','v85'].join('_');
   var ELL = String.fromCharCode(0x2026);
   var OLD_KEYS = [
+    ['delta','blackroom','history','v6'].join('_'),
     ['delta','blackroom','history','v3'].join('_'),
     'delta_blac' + ELL + 'y_v3',
     'delta_blac' + ELL + 'y_v6'
@@ -4233,16 +4268,63 @@ var History = (function(){
   var lastDeleted = null;    // 撤销用（仅内存，不落盘）
 
   function readRaw(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+  /* 跨版本归集：仅当没打过迁移标记时检查旧键；旧键确有记录时才合并并置位标记
+     （新键已有记录也合并，按 id 去重，覆盖「升级后先分析了新记录」的场景）；
+     标记置位后即使新键被清空也不再"复活"旧记录，防止误删后恢复。 */
+  function mergeOldIfNeeded(arr){
+    try{ if (localStorage.getItem(MIGRATED_KEY) === '1') return arr; }catch(e){ return arr; }
+    var oldArr = [];
+    for (var i = 0; i < OLD_KEYS.length; i++){
+      var old = readRaw(OLD_KEYS[i]);
+      if (old){ oldArr = normalizeAll(safeParse(old)); break; }
+    }
+    if (!oldArr.length) return arr;
+    try{ localStorage.setItem(MIGRATED_KEY, '1'); }catch(e){}
+    var seen = {}; arr.forEach(function(x){ seen[x.id] = 1; });
+    var add = oldArr.filter(function(x){ return !seen[x.id]; });
+    if (!add.length) return arr;
+    var merged = add.concat(arr).sort(function(a,b){ return b.ts - a.ts; });
+    if (merged.length > MAX) merged = merged.slice(0, MAX);
+    persist(merged);
+    return merged;
+  }
+  /* 旧版记录归一化：补齐 id/ts/bucket/note 等必备字段；
+     缺结论字段的旧记录按当前算法补算（与导入逻辑共用），保证筛选与趋势有数可用。 */
+  function normalizeRec(x){
+    if (!x || typeof x !== 'object' || !x.input) return null;
+    if (typeof x.risk !== 'number' || !x.verdictKey){
+      if (typeof Analyzer === 'undefined') return null;
+      try{
+        var rr = Analyzer.analyze(x.input, dimsOf(x));
+        x.risk = rr.composite; x.pressure = rr.pressure; x.suppress = rr.suppress;
+        x.verdict = rr.verdict; x.verdictKey = rr.verdictKey; x.pool = rr.pool;
+        x.tone = rr.poolTone; x.th = Math.round(rr.thresholds.hi);
+        x.trust = Math.round(rr.trust * 100); x.cov = Math.round(rr.coverage * 100);
+        x.fbase = Number(rr.fbase.value.toFixed(2));
+        x.drop = Number(rr.drop.finalMult.toFixed(2));
+        x.red = Number(rr.drop.red.toFixed(3)); x.gold = Number(rr.drop.gold.toFixed(2));
+        x.label = rr.label.name; x.labelTone = rr.label.tone; x.mode = rr.mode.name;
+        x.season = x.input.seasonPhase || 'mid'; x.squad = x.input.squadType || 'solo';
+        x.dimC = rr.dimCalibratedCount; x.trig = rr.triggers.length; x.trigList = rr.triggers.slice(0,3);
+        x.drvP = (rr.attrP||[]).filter(function(y){ return y.lift > 2; }).slice(0,3).map(function(y){ return y.name; });
+        x.drvD = (rr.attrD||[]).filter(function(y){ return y.lift > 2; }).slice(0,3).map(function(y){ return y.name; });
+      }catch(e){ return null; }
+    }
+    if (!x.id) x.id = 'h' + (Number(x.ts) || Date.now()) + Math.floor(Math.random()*1000);
+    x.ts = Number(x.ts) || Date.now();
+    if (!x.bucket) x.bucket = bucketOf(x.verdictKey || '');
+    if (x.note == null) x.note = '';
+    return x;
+  }
+  function normalizeAll(list){
+    var out = [];
+    (list || []).forEach(function(x){ var n = normalizeRec(x); if (n) out.push(n); });
+    return out;
+  }
   function load(force){
     if (cache && !force) return cache;
-    var arr = [];
-    var raw = readRaw(KEY);
-    if (!raw){
-      for (var i = 0; i < OLD_KEYS.length; i++){
-        var old = readRaw(OLD_KEYS[i]);
-        if (old){ arr = safeParse(old); if (arr.length) { persist(arr); } break; }
-      }
-    } else arr = safeParse(raw);
+    var arr = safeParse(readRaw(KEY) || '[]');
+    arr = mergeOldIfNeeded(arr);
     cache = arr;
     return arr;
   }
@@ -4278,7 +4360,7 @@ var History = (function(){
     var d = result.derived;
     list.unshift({
       id: 'h' + Date.now() + Math.floor(Math.random()*1000),
-      v: 6, ts: Date.now(),
+      v: 7, ts: Date.now(),
       risk: result.composite, pressure: result.pressure, suppress: result.suppress,
       verdict: result.verdict, verdictKey: result.verdictKey, pool: result.pool,
       bucket: bucketOf(result.verdictKey), tone: result.poolTone,
@@ -4333,33 +4415,14 @@ var History = (function(){
       else if (arr.input && typeof arr.input === 'object') arr = [arr];
     }
     if (!Array.isArray(arr)) throw new Error('内容里找不到记录数组（请粘贴导出的完整 JSON）');
+    /* 兼容旧版导出：normalizeRec 会补齐缺失字段，缺结论的旧记录按当前算法补算 */
     var old = load(), seen = {}, add = [], skipped = 0;
     old.forEach(function(x){ seen[x.id] = 1; });
     arr.forEach(function(x){
-      if (!x || typeof x !== 'object' || !x.input){ skipped++; return; }
-      if (typeof x.risk !== 'number' || !x.verdictKey){
-        /* 外部/旧版记录缺结论字段 → 按当前算法补算，保证筛选与趋势图有数可用 */
-        try{
-          var rr = Analyzer.analyze(x.input, dimsOf(x));
-          x.risk = rr.composite; x.pressure = rr.pressure; x.suppress = rr.suppress;
-          x.verdict = rr.verdict; x.verdictKey = rr.verdictKey; x.pool = rr.pool;
-          x.tone = rr.poolTone; x.th = Math.round(rr.thresholds.hi);
-          x.trust = Math.round(rr.trust * 100); x.cov = Math.round(rr.coverage * 100);
-          x.fbase = Number(rr.fbase.value.toFixed(2));
-          x.drop = Number(rr.drop.finalMult.toFixed(2));
-          x.red = Number(rr.drop.red.toFixed(3)); x.gold = Number(rr.drop.gold.toFixed(2));
-          x.label = rr.label.name; x.labelTone = rr.label.tone; x.mode = rr.mode.name;
-          x.season = x.input.seasonPhase || 'mid'; x.squad = x.input.squadType || 'solo';
-          x.dimC = rr.dimCalibratedCount; x.trig = rr.triggers.length; x.trigList = rr.triggers.slice(0,3);
-          x.drvP = (rr.attrP||[]).filter(function(y){ return y.lift > 2; }).slice(0,3).map(function(y){ return y.name; });
-          x.drvD = (rr.attrD||[]).filter(function(y){ return y.lift > 2; }).slice(0,3).map(function(y){ return y.name; });
-        }catch(e){ skipped++; return; }
-      }
-      if (seen[x.id]) { skipped++; return; }
-      if (!x.bucket) x.bucket = bucketOf(x.verdictKey || '');
-      if (x.note == null) x.note = '';
-      x.ts = Number(x.ts) || Date.now();
-      add.push(x);
+      var n = normalizeRec(x);
+      if (!n || seen[n.id]) { skipped++; return; }
+      seen[n.id] = 1;
+      add.push(n);
     });
     if (!add.length) return { added: 0, total: old.length, msg: '没有可导入的新记录（跳过 ' + skipped + ' 条：已存在或缺少输入数据）' };
     var merged = add.concat(old).sort(function(a,b){ return b.ts - a.ts; }).slice(0, MAX);
@@ -5144,7 +5207,7 @@ var SimView = (function(){
     { k:'playTime',      n:'在线时长',     u:'分', min:60, max:40000,step:10,   g:'收益与行为', hint:'拉长时长＝摊薄效率，同时抬高每局时长' },
     { k:'totalGames',    n:'战局数',       u:'局', min:10, max:3000, step:1,    g:'收益与行为', hint:'样本量直接决定判定阈值松紧' },
     { k:'gearValue',     n:'入场战备',     u:'万', min:1,  max:400,  step:1,    g:'收益与行为', hint:'分房第一门槛；≥78 万进高战备档' },
-    { k:'kdSecret',      n:'机密战损比',   u:'',   min:0.1,max:8,    step:0.05, g:'战斗表现',   hint:'v4.3 起只抬高压轴，不再压爆率（社区拆解称已辟谣（未获官方证实））' },
+    { k:'kdSecret',      n:'机密战损比',   u:'',   min:0.1,max:8,    step:0.05, g:'战斗表现',   hint:'v4.4 起只抬高压轴，不再压爆率（社区拆解称已辟谣（未获官方证实），2026-10 复核维持）' },
     { k:'kdTopSecret',   n:'绝密战损比',   u:'',   min:0.1,max:8,    step:0.05, g:'战斗表现',   hint:'选绝密池时作为主 KD' },
     { k:'hitRate',       n:'命中率',       u:'%',  min:5,  max:80,   step:0.5,  g:'战斗表现',   hint:'<20% 反常；48%+ 匹配到全装/伤害型对手' },
     { k:'precisionRate', n:'精准击败率',   u:'%',  min:3,  max:85,   step:0.5,  g:'战斗表现',   hint:'>60% 主要拉高人机强度' },
@@ -5556,7 +5619,9 @@ var SimView = (function(){
   function syncDimUi(){
     DIM_IDS.forEach(function(id){
       var key = DIM_KEYS[id], el = q(id);
-      q(id + 'Val').textContent = el.value;
+      var nm = q(id + 'Num');
+      /* 正在数字框里输入时不回写，避免打断键入（如连续输入 "1" "0" 组成 10） */
+      if (nm && document.activeElement !== nm) nm.value = el.value;
       var row = el.closest('.dim-row');
       if (row){
         row.classList.toggle('touched', !!dimTouched[key]);
@@ -5780,13 +5845,41 @@ var SimView = (function(){
     });
     DIM_IDS.forEach(function(id){
       var el = q(id); if (!el) return;
+      var nm = q(id + 'Num');
+      /* 拖拉滑块：原有方式，拖动即标定 */
       el.addEventListener('input', function(){
         dimTouched[DIM_KEYS[id]] = true;
         syncDimUi(); preflight(); saveDraft();
       });
+      /* 直接输入数字：v8.5 新增方式，与滑块实时同步，输入即标定 */
+      if (nm){
+        nm.addEventListener('input', function(){
+          var v = parseInt(nm.value, 10);
+          if (!isFinite(v)) return;                     /* 输入中间态（空值/负号）不处理 */
+          v = Math.max(0, Math.min(100, v));
+          el.value = v;
+          dimTouched[DIM_KEYS[id]] = true;
+          syncDimUi(); preflight(); saveDraft();
+        });
+        nm.addEventListener('blur', function(){
+          var v = parseInt(nm.value, 10);
+          if (!isFinite(v)){ nm.value = el.value; return; }   /* 非法输入回退为滑块当前值 */
+          v = Math.max(0, Math.min(100, v));
+          nm.value = v; el.value = v;
+          dimTouched[DIM_KEYS[id]] = true;
+          syncDimUi(); preflight(); saveDraft();
+        });
+        nm.addEventListener('keydown', function(e){
+          if (e.key === 'Enter'){ nm.blur(); }
+        });
+      }
     });
     q('btnDimReset').addEventListener('click', function(){
-      DIM_IDS.forEach(function(id){ q(id).value = 50; dimTouched[DIM_KEYS[id]] = false; });
+      DIM_IDS.forEach(function(id){
+        q(id).value = 50;
+        var nm = q(id + 'Num'); if (nm) nm.value = 50;
+        dimTouched[DIM_KEYS[id]] = false;
+      });
       syncDimUi(); preflight(); saveDraft();
       window.toast && window.toast('五维已复原为「未标定」');
     });
@@ -5895,7 +5988,8 @@ var SimView = (function(){
       { name:'改枪码 · 内置库种子', key:'delta_guncodes_v4_seeded', desc:'内置 461 条方案去重标记，避免重复植入。' },
       { name:'黑潮爆破 · 配装方案库', key:'delta_blacktide_v2', desc:'黑潮爆破热门配装方案与自定义改枪码（四档），快速添加 / 编辑 / 删除 / 批量管理永久保存；旧键 delta_blacktide_v1（絮寒改枪码）已弃用。' },
       { name:'扑克牌收藏', key:'delta_poker_owned', desc:'阿萨拉牌「已拥有」状态记录。' },
-      { name:'历史记录', key:'delta_blackroom_history_v6', desc:'黑屋匹配历史对局记录（仅在历史页签内留存，数据分析草稿不持久化）。' },
+      { name:'历史记录', key:'delta_blackroom_history_v85', desc:'黑屋匹配历史对局记录（v8.5 新键，上限 300 条自动淘汰最旧）。首次加载会自动归集旧版键 delta_blackroom_history_v6 / v3 的记录，旧键原样保留作备份；在别的设备上用旧版「导出 JSON」、本版「导入」同样可迁回历史。' },
+      { name:'历史记录 · 迁移标记', key:'delta_blackroom_history_migrated_v85', desc:'跨版本迁移标记。置 1 表示已完成旧键归集，之后不再自动迁移（防止删除记录后被旧键"复活"）；如需强制重新归集，删掉此键并将新键清空即可。' },
       { name:'数据分析草稿', key:'delta_blackroom_draft_v6', desc:'数据分析页签的录入草稿（退出不重置，下次进入可继续）。' }
     ];
     el.innerHTML = rows.map(function(r){
