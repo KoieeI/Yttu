@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2315181b' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='24' height='24' rx='5' fill='%23ffffff' stroke='none'/%3E%3Cpath d='M4 18V10l4-3 4 3v8'/%3E%3Cpath d='M12 14h8v4'/%3E%3Cpath d='M16 14v-3'/%3E%3C/svg%3E">
-<title>三角洲行动 · 黑屋匹配推测系统 v8.6</title>
+<title>三角洲行动 · 黑屋匹配推测系统 v8.7</title>
 <meta name="description" content="《三角洲行动》S12 赛季黑屋匹配推测与爆率分析工具，完全本地运行。">
 <style>
 /* ============================================================
@@ -23,29 +23,34 @@
 /* ---------- 1. 令牌 ---------- */
 :root{
   /* 中性灰阶：底色略暗于面板，靠明度差分层，不靠边框 */
-  --bg:#f4f5f6;
-  --bg-sunken:#edeef0;
+  --bg:#e9ecf0;
+  --bg-sunken:#dee2e8;
   --panel:#ffffff;
-  --panel-2:#f7f8f9;
-  --panel-3:#f0f1f3;
+  --panel-2:#f4f6f8;
+  --panel-3:#eceef2;
 
-  --ink:#15181b;
-  --ink-2:#4a5057;
-  --ink-3:#878d94;
-  --ink-4:#adb2b8;
+  --ink:#0e1116;
+  --ink-2:#39404a;
+  --ink-3:#616975;
+  --ink-4:#8f97a2;
 
-  --line:#e5e7ea;
-  --line-2:#d8dbdf;
+  --line:#dbdfe5;
+  --line-2:#c3cad3;
+
+  /* 表单控件专用：底色比面板略沉，描边保证在任何底色上都可辨 */
+  --field-bg:#eef2f6;
+  --field-line:#98a3ae;
+  --field-line-hover:#5f6b78;
 
   /* 语义色：低饱和、深色化，保证浅底上的对比度 */
-  --ok:#0f6f5c;
-  --ok-bg:#e9f2f0;
-  --warn:#8a5a12;
-  --warn-bg:#f7f1e5;
-  --danger:#b3382f;
-  --danger-bg:#f8edeb;
-  --info:#3b4f86;
-  --info-bg:#eceff6;
+  --ok:#0a5b49;
+  --ok-bg:#e2eeeb;
+  --warn:#784a0a;
+  --warn-bg:#f6efe1;
+  --danger:#9d2a21;
+  --danger-bg:#f8eae8;
+  --info:#2f4179;
+  --info-bg:#e8ecf5;
 
   /* 圆角：固定档位 */
   --r-1:6px;
@@ -66,10 +71,10 @@
   --s-7:48px;
 
   /* 多层柔和阴影：替代实线边框 */
-  --sh-1:0 1px 2px rgba(21,24,27,.05);
-  --sh-2:0 1px 2px rgba(21,24,27,.04), 0 2px 6px rgba(21,24,27,.035);
-  --sh-3:0 1px 3px rgba(21,24,27,.035), 0 8px 20px rgba(21,24,27,.05);
-  --sh-4:0 2px 6px rgba(21,24,27,.05), 0 24px 56px rgba(21,24,27,.10);
+  --sh-1:0 1px 2px rgba(14,17,22,.07);
+  --sh-2:0 1px 2px rgba(14,17,22,.06), 0 2px 6px rgba(14,17,22,.05);
+  --sh-3:0 1px 3px rgba(14,17,22,.06), 0 8px 20px rgba(14,17,22,.08);
+  --sh-4:0 2px 6px rgba(14,17,22,.08), 0 24px 56px rgba(14,17,22,.14);
 
   --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Hiragino Sans GB","Noto Sans SC","Microsoft YaHei",sans-serif;
   --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
@@ -342,24 +347,24 @@ a{color:var(--info);text-decoration:none}
   padding:9px 12px;
   font-size:13px;
   color:var(--ink);
-  background:var(--panel-3);
+  background:var(--field-bg);
   border:none;
   border-radius:var(--r-3);
-  box-shadow:none;
+  box-shadow:inset 0 0 0 1px var(--field-line);
   transition:box-shadow .2s var(--ease), background .2s var(--ease);
   appearance:none;
   -webkit-appearance:none;
 }
-.ctrl:hover{background:#e8eaec}
+.ctrl:hover{background:#fff;box-shadow:inset 0 0 0 1px var(--field-line-hover)}
 .ctrl:focus{
   outline:none;
-  background:var(--panel);
+  background:#fff;
   box-shadow:0 0 0 2px var(--ink), var(--sh-1);
 }
 .ctrl::placeholder{color:var(--ink-4)}
 select.ctrl{
   padding-right:32px;
-  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23878d94' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2357606c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   background-repeat:no-repeat;
   background-position:right 10px center;
   cursor:pointer;
@@ -368,7 +373,8 @@ select.ctrl{
 input[type=number]{-moz-appearance:textfield}
 input[type=number]::-webkit-outer-spin-button,
 input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-.has-suffix{padding-right:38px}
+.has-suffix{padding-right:40px}
+.has-suffix.wide{padding-right:58px}
 .unit-suffix{
   position:absolute;
   right:12px;
@@ -538,7 +544,7 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
   background:var(--panel-2);
   transition:background .2s var(--ease);
 }
-.dim-row.is-set{background:var(--panel-3)}
+.dim-row.is-set{background:#f2f5f8;box-shadow:inset 0 0 0 1px var(--line)}
 .dim-row > label{font-size:12px;color:var(--ink-2);font-weight:500;letter-spacing:.02em}
 .dim-num{
   width:100%;
@@ -548,12 +554,14 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
   font-size:12px;
   text-align:center;
   color:var(--ink);
-  background:var(--panel);
+  background:var(--field-bg);
   border:none;
   border-radius:var(--r-1);
-  box-shadow:none;
+  box-shadow:inset 0 0 0 1px var(--field-line);
+  transition:box-shadow .18s var(--ease), background .18s var(--ease);
 }
-.dim-num:focus{outline:none;box-shadow:0 0 0 2px var(--ink)}
+.dim-num:hover{background:#fff;box-shadow:inset 0 0 0 1px var(--field-line-hover)}
+.dim-num:focus{outline:none;background:#fff;box-shadow:0 0 0 2px var(--ink)}
 .dim-row .unset{
   font-size:10.5px;
   color:var(--ink-4);
@@ -577,7 +585,8 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
   border-radius:var(--r-pill);
   transition:background .2s var(--ease), color .2s var(--ease), box-shadow .2s var(--ease);
 }
-.chip:hover{background:var(--panel-3);color:var(--ink-2)}
+.chip{box-shadow:inset 0 0 0 1px transparent}
+.chip:hover{background:var(--panel-3);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line-2)}
 .chip.on{background:var(--ink);color:#fff}
 
 .mtag{
@@ -648,7 +657,7 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
 .kpi .v.wn,.kpi .v.warn{color:var(--warn)}
 .kpi .v.ok{color:var(--ok)}
 .kpi .v.info{color:var(--info)}
-.kpi .u{font-size:10px;color:var(--ink-4);margin-left:2px;font-weight:400}
+.kpi .u{font-size:10px;color:var(--ink-3);margin-left:3px;font-weight:400}
 
 /* ---------- 10. 图表 ---------- */
 .chart-box{
@@ -1136,21 +1145,37 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
 .sheet-x svg{width:16px;height:16px}
 .anchors{
   display:flex;
-  gap:5px;
+  gap:2px;
   flex-wrap:wrap;
-  padding:0 var(--s-4) var(--s-3);
+  padding:0 var(--s-4);
+  border-bottom:1px solid var(--line);
+  margin-bottom:var(--s-3);
   flex:0 0 auto;
 }
 .anchors button{
-  font-size:11px;
+  position:relative;
+  font-size:11.5px;
+  font-weight:500;
   color:var(--ink-3);
-  background:var(--panel-2);
-  border-radius:var(--r-pill);
-  padding:3px 9px;
-  transition:background .18s var(--ease), color .18s var(--ease);
+  background:transparent;
+  border-radius:var(--r-2) var(--r-2) 0 0;
+  padding:8px 10px;
+  letter-spacing:.01em;
+  transition:color .18s var(--ease), background .18s var(--ease);
 }
-.anchors button:hover{background:var(--panel-3);color:var(--ink)}
-.anchors button.on{background:var(--ink);color:#fff}
+.anchors button:hover{color:var(--ink);background:var(--panel-2)}
+/* 当前分区：深色文字 + 底部 2px 指示条，指示条贴合该项左右内边距 */
+.anchors button.on{color:var(--ink);font-weight:600;background:transparent}
+.anchors button.on::after{
+  content:'';
+  position:absolute;
+  left:8px;
+  right:8px;
+  bottom:-1px;
+  height:2px;
+  border-radius:1px;
+  background:var(--ink);
+}
 .sheet-body{
   flex:1 1 auto;
   overflow-y:auto;
@@ -1306,7 +1331,7 @@ html.ready .view.on > *:nth-child(n+7){transition-delay:150ms}
     </div>
     <div class="topbar-meta">
       <span class="tag" id="pillSeason">S12 · 微光</span>
-      <span class="tag tag-quiet" id="pillEngine">引擎 v4.5</span>
+      <span class="tag tag-quiet" id="pillEngine">引擎 v4.6</span>
     </div>
   </header>
 
@@ -1386,8 +1411,8 @@ html.ready .view.on > *:nth-child(n+7){transition-delay:150ms}
           </div>
           <div class="field">
             <label for="playTime">游戏时长</label>
-            <input class="ctrl has-suffix" type="number" id="playTime" step="1" inputmode="numeric">
-            <span class="unit-suffix">分</span>
+            <input class="ctrl has-suffix wide" type="number" id="playTime" step="0.5" inputmode="decimal" min="0" max="720">
+            <span class="unit-suffix">小时</span>
           </div>
         </div>
       </div>
@@ -1771,7 +1796,9 @@ html.ready .view.on > *:nth-child(n+7){transition-delay:150ms}
 /* ============================================================
    SECTION: analysis engine v6 (纯逻辑，无 DOM 依赖，可单独测试)
    ------------------------------------------------------------
-   三角洲行动 · 黑屋匹配推测引擎 v4.5 / 系统 v8.6
+   三角洲行动 · 黑屋匹配推测引擎 v4.6 / 系统 v8.7
+   v4.6（2026-11）：时长唯一单位改为「小时」——playTime 直接为总小时数，
+   avgTime 为单局小时数；所有时长阈值改用小时表达，原始分钟口径仅存于注释。
    在 v4.4（2026-09 社区拆解口径重标）之上的 v4.5（S12 口径）改动：
      0. 赛季口径整体迁移至 S12「微光」（国服 2026-11-05 / 国际服 2026-11-10）。
         本引擎所有阈值与结论仅对应 S12，超出校准窗口会明确降级提示。
@@ -1958,15 +1985,15 @@ var Analyzer = (function(){
       [75.0,12, 14,'正常'],
       [90.0,20, 22,'偏高（长期满血撤离强化"不缺物资"判定）'] ] },
 
-    time: { src:'连续3局<10min消极；存活≥10min+10%/≥15+20%/≥20+30%；3min内-30%', anchors:[
-      [6.00,30, 86,'极短（速死流，消极+低爆双判）'],
-      [10.0,24, 72,'低于10分钟存活线，命中消极判定'],
-      [13.0,18, 42,'勉强及格（建议≥12分钟）'],
-      [15.0,12, 22,'达标（低爆脱离要求≥15分钟）'],
-      [18.0,10,  6,'最优区间（+20%~30% 存活爆率）'],
-      [22.0,10,  6,'最优区间'],
-      [32.0,16, 26,'偏长（撤离分反被压缩）'],
-      [45.0,26, 52,'过长（疑似蹲点/挂机）'] ] },
+    time: { src:'连续3局<0.17h消极；存活≥0.17h+10%/≥0.25h+20%/≥0.33h+30%；<0.05h -30%', anchors:[
+      [0.10, 30, 86,'极短（速死流，消极+低爆双判）'],
+      [0.17, 24, 72,'低于 0.17 小时存活线，命中消极判定'],
+      [0.22, 18, 42,'勉强及格（建议≥0.20 小时）'],
+      [0.25, 12, 22,'达标（低爆脱离要求≥0.25 小时）'],
+      [0.30, 10,  6,'最优区间（+20%~30% 存活爆率）'],
+      [0.37, 10,  6,'最优区间'],
+      [0.53, 16, 26,'偏长（撤离分反被压缩）'],
+      [0.75, 26, 52,'过长（疑似蹲点/挂机）'] ] },
 
     yld: { src:'社区正常2.8-4.5、>5.5高收益；社区期望4-6M/h；中枢3M/h', anchors:[
       [1.00, 8, 46,'远低于中枢（低活跃嫌疑，但处补偿方向）'],
@@ -2085,11 +2112,12 @@ var Analyzer = (function(){
   function raidCoef(avgTime, combat, search, evac, coop, yieldV){
     var c = 1.0, items = [];
     if (has(avgTime)){
-      if (avgTime >= 20){ c += 0.30; items.push('存活≥20min +30%'); }
-      else if (avgTime >= 15){ c += 0.20; items.push('存活≥15min +20%'); }
-      else if (avgTime >= 10){ c += 0.10; items.push('存活≥10min +10%'); }
-      else if (avgTime < 3){ c -= 0.30; items.push('3分钟内速死 -30%'); }
-      else { c -= 0.15; items.push('存活不足3~10min -15%'); }
+      /* 阈值单位＝小时；0.33/0.25/0.17/0.05 对应 20/15/10/3 分钟口径 */
+      if (avgTime >= 0.333){ c += 0.30; items.push('存活≥0.33h +30%'); }
+      else if (avgTime >= 0.25){ c += 0.20; items.push('存活≥0.25h +20%'); }
+      else if (avgTime >= 0.167){ c += 0.10; items.push('存活≥0.17h +10%'); }
+      else if (avgTime < 0.05){ c -= 0.30; items.push('单局<0.05h 速死 -30%'); }
+      else { c -= 0.15; items.push('单局 0.05~0.17h -15%'); }
     }
     if (has(combat)){
       if (combat >= 80){ c += 0.15; items.push('击杀+有效伤害（高档）+15%'); }
@@ -2341,8 +2369,9 @@ var Analyzer = (function(){
     var dimCal = opts.dimCalibrated || data.dimCalibrated || {};
 
     /* 衍生量 */
+    /* 时长唯一单位＝小时：playTime 为总小时数，avgTime 为单局小时数 */
     var avgTime = (has(data.playTime) && has(data.totalGames) && data.totalGames > 0) ? data.playTime / data.totalGames : null;
-    var hours = has(data.playTime) ? data.playTime / 60 : null;
+    var hours = has(data.playTime) ? data.playTime : null;
     var yieldMh = (has(data.extractValue) && has(hours) && hours > 0) ? data.extractValue / hours : null;
     var perGameM = (has(data.extractValue) && has(data.totalGames) && data.totalGames > 0) ? data.extractValue / data.totalGames : null;
     var lossG = (has(data.totalGames) && has(data.evacRate)) ? data.totalGames * (1 - data.evacRate/100) : null;
@@ -2403,12 +2432,12 @@ var Analyzer = (function(){
     if (has(data.hitRate) && data.hitRate > 55 && has(data.precisionRate) && data.precisionRate > 60){
       extraP += 9; triggers.push('命中率与精准击败率同时异常偏高，触发反作弊观察');
     }
-    if (has(data.evacRate) && data.evacRate > 40 && has(avgTime) && avgTime >= 15){
+    if (has(data.evacRate) && data.evacRate > 40 && has(avgTime) && avgTime >= 0.25){
       extraP += 5; extraD += 4;
       triggers.push('撤离率 ' + data.evacRate.toFixed(0) + '% 且存活充足，三连撤触发检测局概率上升');
     }
-    if (has(avgTime) && avgTime < 10){
-      extraD += 8; triggers.push('平均每局 ' + avgTime.toFixed(1) + ' 分钟低于 10 分钟存活线，符合「连续3局存活<10分钟」消极判定');
+    if (has(avgTime) && avgTime < 0.167){
+      extraD += 8; triggers.push('平均每局 ' + avgTime.toFixed(2) + ' 小时低于 0.17 小时存活线，符合「连续3局存活<0.17小时」消极判定');
     }
     if (has(data.evacRate) && data.evacRate >= 80){
       extraD += 6; triggers.push('撤离率稳定 80%+ 是社区明示的「高收益玩家」判据之一');
@@ -2494,9 +2523,9 @@ var Analyzer = (function(){
       else checks.push({ lv:'ok', text:'赚损比口径自洽（推算值 ' + prCheck.toFixed(2) + 'M，偏差 ' + (dev*100).toFixed(0) + '%）' });
     }
     if (has(avgTime)){
-      if (avgTime > 60) checks.push({ lv:'warn', text:'每局 ' + avgTime.toFixed(1) + ' 分钟明显超出常规对局长度，请确认「游戏时长」是否包含大厅与匹配等待时间' });
-      else if (avgTime < 3) checks.push({ lv:'warn', text:'每局仅 ' + avgTime.toFixed(1) + ' 分钟，多为速死；此时时长口径直接决定消极判定，建议核对' });
-      else checks.push({ lv:'ok', text:'每局时长 ' + avgTime.toFixed(1) + ' 分钟处于合理区间（3–60 分钟）' });
+      if (avgTime > 1) checks.push({ lv:'warn', text:'每局 ' + avgTime.toFixed(2) + ' 小时明显超出常规对局长度，请确认「游戏时长」是否包含大厅与匹配等待时间' });
+      else if (avgTime < 0.05) checks.push({ lv:'warn', text:'每局仅 ' + avgTime.toFixed(2) + ' 小时，多为速死；此时时长口径直接决定消极判定，建议核对' });
+      else checks.push({ lv:'ok', text:'每局时长 ' + avgTime.toFixed(2) + ' 小时处于合理区间（0.05–1 小时）' });
     }
     if (has(data.teammateValue) && has(data.extractValue) && data.teammateValue > data.extractValue)
       checks.push({ lv:'warn', text:'带出队友价值（' + data.teammateValue + 'M）大于本人累计带出（' + data.extractValue + 'M），口径可能有误' });
@@ -2522,7 +2551,7 @@ var Analyzer = (function(){
     var sb = seasonBasis(now);
 
     var out = {
-      version:'v4.5', engine:'v8.6',
+      version:'v4.6', engine:'v8.7',
       seasonBasis: sb,
       pressure: Math.round(pressure), suppress: Math.round(suppress), composite: Math.round(composite),
       verdictKey: vKey, verdict: vName, pool: pool, poolTone: poolTone, sev: sev,
@@ -2571,9 +2600,9 @@ var Analyzer = (function(){
   function detectLabel(d, kd, avgTime, D){
     var ag = (has(D.combat) && D.combat >= 75) || (has(kd) && kd >= 2.0) ||
              (has(d.hitRate) && d.hitRate >= 40 && has(d.precisionRate) && d.precisionRate >= 50);
-    var sk = (has(d.evacRate) && d.evacRate >= 60) || (has(avgTime) && avgTime <= 10) ||
+    var sk = (has(d.evacRate) && d.evacRate >= 60) || (has(avgTime) && avgTime <= 0.167) ||
              (has(D.combat) && D.combat <= 45 && has(D.search) && D.search >= 80);
-    var pa = (has(avgTime) && avgTime < 10) && (has(D.combat) && D.combat < 40);
+    var pa = (has(avgTime) && avgTime < 0.167) && (has(D.combat) && D.combat < 40);
     var an = (has(d.hitRate) && d.hitRate < 20) ||
              (has(d.evacRate) && d.evacRate < 12 && has(D.combat) && D.combat < 45) ||
              (has(d.precisionRate) && d.precisionRate > 60);
@@ -2615,7 +2644,7 @@ var Analyzer = (function(){
     { k:'precisionRate', lo:3, hi:85, name:'精准击败率', unit:'%', fmt:1 },
     { k:'gearValue', lo:1,    hi:320, name:'入场战备',  unit:'万', fmt:0 },
     { k:'extractValue', lo:1, hi:2000, name:'带出价值', unit:'M', fmt:1, note:'代表收益节奏：少带出或转存仓库不即时领取' },
-    { k:'playTime',  lo:60,   hi:40000, name:'在线时长', unit:'分', fmt:0, note:'同产出下拉长在线时长＝摊薄收益效率' },
+    { k:'playTime',  lo:0.5,  hi:700, name:'在线时长', unit:'小时', fmt:1, note:'同产出下拉长在线时长＝摊薄收益效率' },
     { k:'dimCombat', lo:5,    hi:100, name:'战斗五维',  unit:'分', fmt:0, dim:true },
     { k:'dimSearch', lo:5,    hi:100, name:'搜索五维',  unit:'分', fmt:0, dim:true },
     { k:'dimSurvival', lo:5,  hi:100, name:'生存五维', unit:'分', fmt:0, dim:true }
@@ -2781,8 +2810,8 @@ var Analyzer = (function(){
       tips.push('降低爆轴：把搜刮的高价物资上架交易行而非即时领取邮件哈夫币；同时提高入场消耗（高价房卡/弹药）把赚损比拉回 0.8–1.5M，把收益效率压回 4.5 M/h 以内。');
     if (r.loss.value <= 1.0 && r.composite > r.thresholds.mid)
       tips.push('制造优质战损：带高价值装备正常交战后阵亡（非自雷、非空装），补偿爆率 +30%~80%；连续 3 局优质战损后第 4 局触发补偿局，红品临时升至 2.5%~3.2%。劣质战损（自雷/空装送头）仅 +5%~15%。');
-    if (has(dv.avgTime) && dv.avgTime < 13)
-      tips.push('把单局拉长到 15 分钟以上再撤：存活≥15min +20%、≥20min +30%，同时摆脱消极标记（解除需连续15局每局≥30分钟且累计10次撤离）。');
+    if (has(dv.avgTime) && dv.avgTime < 0.22)
+      tips.push('把单局拉长到 0.25 小时以上再撤：存活≥0.25h +20%、≥0.33h +30%，同时摆脱消极标记（解除需连续 15 局每局≥0.5 小时且累计 10 次撤离）。');
     if (r.label.name === '潜行跑刀' || r.label.name === '消极型')
       tips.push('每局搜索≥15个容器（含工具箱/手提袋等低值容器，避免只摸保险）、完成至少 1 个局内任务并造成有效伤害，把画像改回「稳健均衡」。');
     if (d.squadType === 'trio' || d.squadType === 'duo')
@@ -2802,11 +2831,11 @@ var Analyzer = (function(){
   var SOURCES = [
     { tone:'', name:'基础爆率与上限', text:'普通红品 0.08%／金品 1.2%；机密 0.35%／3.8%；绝密 0.80%／7.5%。单局红品硬上限 3.2%、金品 12%，三模式爆率池与额度完全隔离。', src:'社区拆解整理《三角洲行动爆率底层逻辑》《爆率判定机制》2026-07' },
     { tone:'', name:'爆率五系数权重', text:'账号基础 40%／当局表现 35%／战损补偿 15%／收益额度 7%／特殊事件 3%。F_base 由长期 KD（0.3）、赚损比（0.3）、撤离率（0.2）、活跃天数（0.1）、赛季任务完成度（0.1）加权。本工具四份独立条目（2026-04-12、07-05、07-15、07 版）数值完全一致，视为该口径稳定。', src:'社区拆解整理《动态爆率机制说明》《爆率判定机制》《账号爆率机制》' },
-    { tone:'g', name:'局内表现系数明细（v4.3 重标依据）', text:'正向：击杀玩家 +8%~15%（连杀再叠 +5%）、有效伤害 1000+ +5%／3000+ +12%、大保险箱 +20%／小保险箱 +12%／航空箱 +8%、击败精英AI +30%~50%、存活≥10min +10%／≥15min +20%／≥20min +30%、成功撤离 +15%（残血撤离再 +5%）。负向：3分钟内速死 -30%、全程避战速撤 -20%~40%、自雷/恶意退出 -50%~80%、低值容器每 10 个 -3%。', src:'社区拆解整理 2026-04-12／07-05／07-15' },
+    { tone:'g', name:'局内表现系数明细（v4.3 重标依据）', text:'正向：击杀玩家 +8%~15%（连杀再叠 +5%）、有效伤害 1000+ +5%／3000+ +12%、大保险箱 +20%／小保险箱 +12%／航空箱 +8%、击败精英AI +30%~50%、存活≥0.17h +10%／≥0.25h +20%／≥0.33h +30%、成功撤离 +15%（残血撤离再 +5%）。负向：单局<0.05h 速死 -30%、全程避战速撤 -20%~40%、自雷/恶意退出 -50%~80%、低值容器每 10 个 -3%。', src:'社区拆解整理 2026-04-12／07-05／07-15' },
     { tone:'v', name:'对局强度四维与爆率四组成（v4.3 轴向依据）', text:'匹配强度由四项隐藏分决定：战备分、战斗活跃度分、长期赚损比、账号综合身价；爆率则由「基础爆率 + 补偿爆率 + 正向行为分 + 用户画像」组成。这一划分是本工具两轴分离的直接依据——<b>身价类指标进高压轴，收益与行为类指标进低爆轴</b>。', src:'社区拆解整理《收益、损耗与补偿的底层原理》2026-06-25' },
     { tone:'v', name:'KD 与爆率方向修正（重要）', text:'社区拆解称已辟谣（未获官方证实）「KD 越高爆率越低」：KD≥1.8 且赚损比≥2.0 且撤离率≥65% 属<b>优质账号</b>，基础爆率提升 50%~80%；只有 F_base<0.5（KD<0.5、赚损比<0.7、撤离率<30%）才压制 70%+。v4.2 及以前把社区流传的「高KD降爆率」写进了低爆轴，本次已反转。', src:'社区拆解整理《猛攻模式收益与亏损机制》2026-07-07' },
     { tone:'o', name:'额度与投喂返还（v4.3 新增说明）', text:'每日额度耗尽后红品爆率降至 0.05% 以下；摸容器即扣额度，无论是否带出：送队友返还 30%、撤离失败返还 40%、送敌且被带出返还 50%、直接丢弃返还 0；接受他人投喂会直接占用自身额度。本工具仍以「带出/小时」近似额度消耗，未逐笔建模返还规则。', src:'社区拆解整理《每局物资预估与隐性资产机制》2026-07-28' },
-    { tone:'o', name:'奖池共享与后期爆率', text:'系统为每局分配固定总爆率奖池由在场玩家平分，每有 1 名玩家死亡或撤离，剩余玩家份额自动增加；绝密局最后 10 分钟存活越少爆率越高，后期搜保险箱出货率约为开局 2~3 倍。该机制会污染「单局不出货」的体感判断，属本工具未建模项。', src:'社区拆解整理《每局物资预估与隐性资产机制》2026-07-28' },
+    { tone:'o', name:'奖池共享与后期爆率', text:'系统为每局分配固定总爆率奖池由在场玩家平分，每有 1 名玩家死亡或撤离，剩余玩家份额自动增加；绝密局最后 0.17 小时存活越少爆率越高，后期搜保险箱出货率约为开局 2~3 倍。该机制会污染「单局不出货」的体感判断，属本工具未建模项。', src:'社区拆解整理《每局物资预估与隐性资产机制》2026-07-28' },
     { tone:'g', name:'特殊事件系数明细', text:'权重 3%：活动期间全局爆率 +30%~100%；凌晨 1-3 点低谷期 +15%~25%；连续 5 局未撤离且未出金，下局基础爆率 +20%；赛季前 10 局新手爆率 +50% 且必出至少 1 金。本工具目前只对活动窗口与赛季阶段建模，时段与连续局数未采集（不臆造）。', src:'社区拆解整理 2026-04-12／07-05' },
     { tone:'v', name:'本工具建模取舍（闸门而非权重）', text:'来源同时给出「额度系数权重 7%」与「达额后爆率骤降 70%-90%」，纯加法下无法自洽（7% 权重最多压低 7%）。故本工具把收益额度、对局标签、组队方式改为<b>乘法闸门</b>：四系数加法核心归一至 0.93 后再乘闸门，以复现「越强越难出货」的实测形态。属推断性建模，非社区拆解口径。', src:'本工具推断' },
     { tone:'o', name:'F_base 分档', text:'优质 ≥1.5（KD≥1.8、赚损比≥2.0、撤离率≥65%，爆率 +50%~80%）／标准 1.0-1.5／低迷 0.5-1.0（-20%~40%）／黑屋 &lt;0.5（KD&lt;0.5、赚损比&lt;0.7、撤离率&lt;30%，压制 70%+）。', src:'社区拆解整理 2026-07' },
@@ -2817,16 +2846,16 @@ var Analyzer = (function(){
     { tone:'', name:'工资池与额度', text:'每小时产出中枢约 300 万（3 小时刷新），带出期望合理区间 400-600 万／小时；每日额度普通 800 万、高活跃 1100 万（"新手 500 万"档在 S12 未检索到可核验出处，已移除），达额后红金爆率骤降 70%-90%，每日 0 点重置、离线每小时恢复 5%。', src:'前员工爆料贴（未证实）+ 社区拆解整理 2026-05/07' },
     { tone:'', name:'水平五档划分（绝密口径）', text:'赚损比 &lt;0.6M／0.6-0.8M／0.8-1.0M／1.0-1.5M／1.5M+ 对应低水平至小高手；KD 0.5 以下／0.5-0.8／0.8-1.2／1.2-1.5／1.5-1.8；战斗分 40／45／50／55／65。', src:'社区拆解整理《对局质量与水平评估》2026-07-27' },
     { tone:'', name:'撤离率区间', text:'普通玩家基准线约 30%，均衡安全区间 20%-35%（超 35% 触发「稳定盈利」锁爆率），跑刀号可达 80%-90%，低于 10% 进入「神人局」。', src:'社区拆解整理 2026-07-05/07' },
-    { tone:'', name:'行为分与时长', text:'存活 ≥15 分钟 +20%、≥20 分钟 +30%；3 分钟内速死 -30%；全程避战速撤 -20%~40%；自雷／恶意退出 -50%~80%；连续 3 局存活 &lt;10 分钟命中消极判定，解除需连续 15 局每局 ≥30 分钟且累计 10 次撤离。', src:'社区拆解整理 2026-04/07' },
+    { tone:'', name:'行为分与时长', text:'存活 ≥0.25 小时 +20%、≥0.33 小时 +30%；单局 <0.05 小时速死 -30%；全程避战速撤 -20%~40%；自雷／恶意退出 -50%~80%；连续 3 局存活 &lt;0.17 小时命中消极判定，解除需连续 15 局每局 ≥0.5 小时且累计 10 次撤离。', src:'社区拆解整理 2026-04/07' },
     { tone:'v', name:'S12「微光」赛季口径（本版基准）', text:'S12「微光」国服 2026-11-05（国际服 2026-11-10）上线，赛季通行证与"档案"系统延期，新增"炫彩"品质外观箱（仅 S12 及以后开启、无法回溯历史赛季）、收藏室"可移交物品"标记、局内标记轮盘、密码门交互优化与结算协同数据。上述改动均属系统与 UI 层，<b>官方公告中未提及任何黑屋匹配、隐藏分或局内爆率的调整</b>，故本引擎的判定阈值与爆率基数沿用 S11 口径，仅把赛季窗口与阶段系数迁移到 S12。', src:'S12「微光」赛季更新公告（2026-11-05）+ 新浪游戏／17173／游侠 2026-11 转录' },
     { tone:'o', name:'S12 未公示项（不建模）', text:'S12 期间官方未公布隐藏分公式、匹配权重、局内爆率或"炫彩"掉率；社区流传的两组"精确"爆率（国际服 红 0.09%／金 1.35%，机密 0.42%／3.9%，绝密 0.91%／7.8%；国服 红 0.075%／金 1.15%，机密 0.32%／3.6%，绝密 0.7%／7.2%）<b>互相冲突且均无官方出处</b>，按冲突取保守原则保留原基数不替换。', src:'交叉检索未找到官方或可信第三方出处，登记为未核验' },
     { tone:'g', name:'标签分池（降级为未证实）', text:'S10 引入的对局标签（猛攻攻坚／潜行跑刀）及其大红基础爆率下调 20%-40%，<b>在 S12 官方公告与可核验社区资料中均未出现</b>；本工具不再把它当作"官方分池机制"，仅保留为行为画像修正项，并在结论中注明属未证实口径。', src:'S10 社区拆解 2026-07/08；S12 复核未见延续表述' },
-    { tone:'v', name:'组队与合池（S12 可核验）', text:'S12 起国际服与 Garena 端合池匹配，社区实测集结模式排位时长由约 7 分钟降至 1–2 分钟；同时 S12 与 S11 数据互通。合池只影响匹配池规模（等待时长与对手来源），不构成爆率或隐藏分规则的改变，故本工具仅在组队闸门处保留原权重。', src:'S12 合池实测讨论串 + 玩家反馈 2026-11' },
+    { tone:'v', name:'组队与合池（S12 可核验）', text:'S12 起国际服与 Garena 端合池匹配，社区实测集结模式排位等待时长明显缩短；同时 S12 与 S11 数据互通。合池只影响匹配池规模（等待时长与对手来源），不构成爆率或隐藏分规则的改变，故本工具仅在组队闸门处保留原权重。', src:'S12 合池实测讨论串 + 玩家反馈 2026-11' },
     { tone:'g', name:'巅峰赛独立匹配（S12 可核验）', text:'S12 新增"巅峰赛"（7v7、多阶段胜负制，入场门槛钛金 3、31 级以上），<b>使用独立匹配池，不参与烽火地带段位分结算</b>。因该模式有独立匹配池，其黑屋判定与爆率不适用烽火地带结论，本工具不对其建模。', src:'巅峰赛规则公告 2026-11 + 游戏内规则页' },
     { tone:'o', name:'地图更正', text:'潮汐监狱为 <b>S5「破壁」(2025-07-03)</b> 上线的绝密专属图（行动等级≥33，战备门槛后由 78 万下调至 24.75 万），并非 S11 新图；本工具早期版本标注有误，已更正。', src:'版本公告核对' },
     { tone:'v', name:'组队连坐（v6 新入模）', text:'组排按队内最高隐藏分/KD 匹配（不取平均）：双排高压轴 +4、爆率 ×0.96；三排 +6、全局爆率 ×0.82；单排不计。v4.1 未建模此项。', src:'社区拆解整理 + 社区实测' },
     { tone:'v', name:'S12 数据源复核（v8.6）', text:'在 S12 窗口内重新核验：基础爆率（普通红 0.08%／金 1.2%，机密 0.35%／3.8%，绝密 0.8%／7.5%）、单局硬上限（红 3.2%／金 12%）、每日额度（普通 800 万／高活跃 1100 万，每日 0 点重置）、F_base 五系数（KD 0.3／赚损比 0.3／撤离率 0.2／活跃天数 0.1／赛季任务 0.1）与四档分级（优质 ≥1.5 +50%~80%／标准 1.0-1.5／低迷 0.5-1.0 -20%~40%／黑屋 <0.5 压制 70%+）。<b>以上均为社区拆解值，官方从未公示</b>；S12 窗口内未检索到官方修改记录，故基数不变。', src:'S12 公告交叉核验（2026-11）+ 社区拆解整理 2026-04~07' },
-    { tone:'g', name:'隐藏爆率条与模式轮换', text:'社区拆解称每模式存在独立「爆率条」：赛季初满格、随搜索次数衰减、离线缓慢恢复、切换模式可重置对应爆率条；绝密局后期（最后 10 分钟）存活越少爆率越高，后期搜保险出货率约为开局 2~3 倍。该机制解释了大量「单局不出货」体感，本工具只在结论提示中引用，不改变评分权重。', src:'游侠网《万金泪冠刷新概率分析》2026-02 + 社区拆解整理 2026-07-28' },
+    { tone:'g', name:'隐藏爆率条与模式轮换', text:'社区拆解称每模式存在独立「爆率条」：赛季初满格、随搜索次数衰减、离线缓慢恢复、切换模式可重置对应爆率条；绝密局后期（最后 0.17 小时）存活越少爆率越高，后期搜保险出货率约为开局 2~3 倍。该机制解释了大量「单局不出货」体感，本工具只在结论提示中引用，不改变评分权重。', src:'游侠网《万金泪冠刷新概率分析》2026-02 + 社区拆解整理 2026-07-28' },
     { tone:'g', name:'匹配口径沿革（S11 起，S12 延续）', text:'S11「群星」起排位匹配不再只看段位，而结合近期 KD、场均击杀、助攻数、团队贡献等综合数据匹配同段位、同场均表现玩家；S12 未公告改动该口径，视为延续。该口径支持高压轴把「战斗活跃度分」取最高权重、并小幅上调合作分权重。', src:'S11 排位规则优化公告 + S12 公告交叉核对 2026-11' },
     { tone:'o', name:'2026-10 社区对照实测与体感', text:'同地图同容器对照：零战备白装跑刀号「十摸九空」，六套高战备猛攻号同点明显更高——支持低战备压制假设（已用于 gear 规格表）；单局带出触及系统阈值即显著压低高价值爆率；腾讯频道 2026-10-02 出现集中「黑屋／爆率调低」投诉帖。以上为定性参考，未获官方证实，仅作辅证不单独触发判定。', src:'社区实测帖 + 腾讯频道玩家反馈 2026-10' }
   ];
@@ -2838,11 +2867,12 @@ var Analyzer = (function(){
     { tone:'g', name:'五维口径', text:'面板并不直接给出五维读数，滑块值属主观标定。v6 起未标定的维度一律不参与评分，避免默认值污染归因；标定后判定会更接近真实画像。' },
     { tone:'g', name:'置信度联动', text:'判定阈值不再是固定 58：按加权覆盖率与样本量在 58–72 区间动态上浮，样本越少越保守，宁可漏判不误判。翻转与否还会经 ±8% 扰动重算验证。' },
     { tone:'', name:'赛季阶段精度', text:'赛季初/中/末已入模（×1.25／×0.85），但仍缺「距赛季更新第几天」的精确输入，前五局 70% 校准权重无法逐局还原。' },
-    { tone:'v', name:'v4.5 权重仍为人工标定', text:'两轴权重由「来源归因方向 + 社区五系数占比」人工推导，不是对真实服务端做回归得到的：官方从未公布任何权重数值，S12 期间亦无可复现的大样本。因此权重排序的意义大于绝对分值，判定档位切换比分数本身更可靠。v4.5 未调整权重，只迁移赛季窗口并清理过期事件项。' },
+    { tone:'v', name:'v4.6 权重仍为人工标定', text:'两轴权重由「来源归因方向 + 社区五系数占比」人工推导，不是对真实服务端做回归得到的：官方从未公布任何权重数值，S12 期间亦无可复现的大样本。因此权重排序的意义大于绝对分值，判定档位切换比分数本身更可靠。v4.5 未调整权重，只迁移赛季窗口并清理过期事件项。' },
     { tone:'v', name:'未采集的模型权重项', text:'活跃天数与赛季任务完成度（F_base 各占 0.1）、击败精英AI 次数、有效伤害量、残血撤离、开容器数与品质、投喂与丢弃返还、凌晨时段与连续未出货局数——这些社区拆解中提及会加/扣爆率的行为项，面板读不到，本工具一律不臆造输入。' },
     { tone:'g', name:'爆率模拟页的边界', text:'「爆率模拟」页只持有录入快照的深拷贝，用于观察「改一个变量会怎样」，它<b>不回写录入页、不写入历史记录、不进入历史分析统计</b>。因此模拟得到的好结果不代表账号已降档——必须回到「数据分析」页录入真实数据再判定。' },
     { tone:'g', name:'五维双输入方式（v8.6）', text:'五维支持「拖拉滑块」与「直接输入数字」两种录入口径，二者实时同步、等价参与计分：任一方式操作过即标记「已标定」，未操作过一律按 50 分占位、不参与评分。直接输入适合对照面板读数精确录入，但不改变「面板不公开五维读数、标定值属主观」这一根本局限。' },
-    { tone:'g', name:'历史记录跨版本保留（v8.6）', text:'v8.6 起历史记录写入新键 delta_blackroom_history_v86，首次加载自动归集 v8.5 及更早记录且旧键原样保留作备份；在别的设备上「导出 JSON」后于新版本「导入文件 / 粘贴导入」即可迁回。导入时缺结论字段的旧记录会按当前算法补算，判定可能与当时不同。' },
+    { tone:'g', name:'时长单位统一为小时（v8.7）', text:'全系统时长唯一单位＝「小时」：输入填总小时数，单局时长＝总时长÷战局数（小时），存活线判定为 0.17/0.25/0.33 小时。历史记录写入新键 delta_blackroom_history_v87，早于 v8.7 的记录在迁移时按 60 折算一次，旧键保留作备份，不会出现旧数据被当成小时放大 60 倍的情况。', src:'本工具单位规范' },
+    { tone:'g', name:'历史记录跨版本保留（v8.7）', text:'v8.7 起历史记录写入新键 delta_blackroom_history_v87，首次加载自动归集 v8.6 及更早记录且旧键原样保留作备份；在别的设备上「导出 JSON」后于新版本「导入文件 / 粘贴导入」即可迁回。导入时缺结论字段的旧记录会按当前算法补算，判定可能与当时不同。' },
     { tone:'v', name:'结论仅对应 S12', text:'本引擎的阈值、系数与四档分级只在 S12「微光」窗口（2026-11-05 起，校准上限 2027-02-04）内成立。超出该窗口后引擎不再声称结论适用于当前赛季，只提示核对版本；若官方在赛季中暗改参数，本工具无法感知。' },
     { tone:'o', name:'炫彩品质未建模（S12）', text:'S12 新增"炫彩"品质位于红品之上，官方未公示掉率。本工具不为其赋值，红/金概率仍按原基数输出——这意味着当炫彩挤占出货权重时，红品实际掉率可能低于模型值。' },
     { tone:'o', name:'巅峰赛不适用（S12）', text:'S12 巅峰赛（7v7）使用独立匹配池、不参与烽火地带段位结算，本工具不对其建模，请勿用烽火地带结论套用该模式。' },
@@ -3394,9 +3424,9 @@ var UI = (function(){
       ['赚损比（面板口径）', n2(d.profitRatio, 2, ' M'), tag(F.profit, 'd'), 0],
       ['　└ 按失败场次推算', n2(dv.prCheck, 2, ' M'), '', 0],
       ['带出 / 累计报酬', n2(d.extractValue, 1, ' M') + ' / ' + n2(d.totalReward, 1, ' M'), '', 0],
-      ['战局数 / 时长', (H(d.totalGames) ? d.totalGames + ' 局' : '—') + ' / ' + (H(d.playTime) ? d.playTime + ' 分' : '—'), '', 0],
+      ['战局数 / 时长', (H(d.totalGames) ? d.totalGames + ' 局' : '—') + ' / ' + (H(d.playTime) ? Number(d.playTime).toFixed(1) + ' 小时' : '—'), '', 0],
       ['收益效率系数', n2(dv.yieldMh, 2, ' M/h'), tag(F.yld, 'd'), 0],
-      ['平均每局时长', n2(dv.avgTime, 1, ' 分钟'), tag(F.time, 'd'), 0],
+      ['平均每局时长', n2(dv.avgTime, 2, ' 小时'), tag(F.time, 'd'), 0],
       ['机密战损比', n2(d.kdSecret, 2, ''), '', 0],
       ['绝密战损比', n2(d.kdTopSecret, 2, ''), '', 0],
       ['主模式战损比', n2(dv.kdMain, 2, ''), tag(F.kd, 'p'), 0],
@@ -3414,7 +3444,7 @@ var UI = (function(){
         dv.combatEst && H(r.D.combat) ? '与标定值相差 ' + Math.abs(dv.combatEst.est - r.D.combat).toFixed(0) + ' 分' : '缺 KD 或撤离率', 0]
     ];
     var h = ['<div class="kpis" style="margin-bottom:12px">' +
-      kpi('每局时长', n2(dv.avgTime, 1), '分', 'mute') +
+      kpi('每局时长', n2(dv.avgTime, 2), '小时', 'mute') +
       kpi('收益效率', n2(dv.yieldMh, 2), 'M/h', dv.yieldMh > 6 ? 'dg' : dv.yieldMh > 4.5 ? 'wn' : 'ok') +
       kpi('场均带出', n2(dv.perGameM, 2), 'M', dv.perGameM > 6 ? 'dg' : 'mute') +
       kpi('F_base', r.fbase.value.toFixed(2), '', r.fbase.value < 0.5 ? 'dg' : r.fbase.value >= 1.5 ? 'ok' : 'mute') +
@@ -3482,7 +3512,8 @@ var UI = (function(){
     var OPEN = { verdict:1, axes:1, drivers:1, targets:1, advice:1 };
     var ah = [];
     SECTIONS.forEach(function(s){
-      ah.push('<button type="button" data-sec="' + s.id + '"' + (OPEN[s.id] ? ' class="on"' : '') + '>' + esc(s.t) + '</button>');
+      /* 页签表示「当前所在分区」，只允许一项高亮；初始取首节，随后由滚动联动接管 */
+      ah.push('<button type="button" data-sec="' + s.id + '"' + (s.id === 'verdict' ? ' class="on" aria-current="true"' : '') + '>' + esc(s.t) + '</button>');
       parts.push('<div class="sec' + (OPEN[s.id] ? ' open' : '') + '" id="sec-' + s.id + '" data-sec="' + s.id + '">' +
         '<div class="sec-hd" role="button" tabindex="0"><span class="st">' + esc(SECTION_MARK[s.id] || '·') + '</span><h3>' + esc(s.t) + '</h3>' +
         '<span class="sub">' + esc(s.s) + '</span>' +
@@ -3498,6 +3529,8 @@ var UI = (function(){
     // 画布延到下一帧绘制，避免与 DOM 写入抢主线程
     requestAnimationFrame(function(){
       try { Charts.bars(document.getElementById('barChart'), r.chart, r.thresholds.hi); } catch(e){}
+      bindAnchors();
+      syncActive();
     });
   }
   var SECTION_MARK = { verdict:'定', axes:'轴', drivers:'因', targets:'解', modes:'模', drop:'爆', data:'数', trust:'信', disputes:'冲', advice:'建' };
@@ -3505,7 +3538,7 @@ var UI = (function(){
   /* 纯文本报告（复制用） */
   function plainText(data, r){
     var dv = r.derived, L = [];
-    L.push('三角洲行动 · 黑屋匹配推测（v8.6 / 引擎 ' + r.version + ' / ' + (r.seasonBasis ? r.seasonBasis.label : 'S12') + '）');
+    L.push('三角洲行动 · 黑屋匹配推测（v8.7 / 引擎 ' + r.version + ' / ' + (r.seasonBasis ? r.seasonBasis.label : 'S12') + '）');
     L.push('时间：' + new Date().toLocaleString('zh-CN'));
     L.push('判定：' + r.verdict + '｜匹配池：' + r.pool);
     L.push('综合 ' + r.composite + '（阈值 ' + r.thresholds.hi.toFixed(0) + '，边缘 ' + r.thresholds.mid.toFixed(0) + '）｜高压轴 ' + r.pressure + '｜低爆轴 ' + r.suppress);
@@ -3538,6 +3571,76 @@ var UI = (function(){
     return L.join('\n');
   }
 
+  /* ---------- 结论页签：单一当前项 ----------
+     页签不再是「展开状态」，而是「当前浏览位置」：点击跳到该分区并展开，
+     滚动时反查最靠近视口顶部的分区回写高亮，保证指示始终只有一项。 */
+  var anchored = false;
+  function setActive(id){
+    var wrap = document.getElementById('sheetAnchors');
+    if (!wrap) return;
+    var btns = wrap.querySelectorAll('button[data-sec]');
+    for (var i = 0; i < btns.length; i++){
+      var on = btns[i].getAttribute('data-sec') === id;
+      btns[i].classList.toggle('on', on);
+      if (on) btns[i].setAttribute('aria-current', 'true');
+      else btns[i].removeAttribute('aria-current');
+    }
+  }
+  function syncActive(){
+    var body = document.getElementById('sheetBody');
+    if (!body) return;
+    var br = body.getBoundingClientRect();
+    var secs = body.querySelectorAll('.sec');
+    if (!secs.length) return;
+    /* 滚到底部：末尾分区可能始终在视口内，直接取最后一个，否则会停在中间的折叠节 */
+    if (body.scrollTop + body.clientHeight >= body.scrollHeight - 4){
+      setActive(secs[secs.length - 1].getAttribute('data-sec'));
+      return;
+    }
+    var pick = secs[0].getAttribute('data-sec'), best = -1e9, nearest = 1e9;
+    for (var i = 0; i < secs.length; i++){
+      var y = secs[i].getBoundingClientRect().top - br.top;
+      if (y <= 6 && y > best){ best = y; pick = secs[i].getAttribute('data-sec'); }
+      if (y < nearest){ nearest = y; }
+    }
+    if (best === -1e9){
+      /* 已滚动到首节上方：回落到最靠近顶部的分区 */
+      for (var j = 0; j < secs.length; j++){
+        if (secs[j].getBoundingClientRect().top - br.top === nearest){ pick = secs[j].getAttribute('data-sec'); break; }
+      }
+    }
+    setActive(pick);
+  }
+  function bindAnchors(){
+    if (anchored) return;
+    var wrap = document.getElementById('sheetAnchors');
+    var body = document.getElementById('sheetBody');
+    if (!wrap || !body) return;
+    anchored = true;
+    wrap.addEventListener('click', function(e){
+      var t = e.target, btn = null;
+      while (t && t !== wrap){
+        if (t.getAttribute && t.getAttribute('data-sec')){ btn = t; break; }
+        t = t.parentNode;
+      }
+      if (!btn) return;
+      var id = btn.getAttribute('data-sec');
+      var sec = document.getElementById('sec-' + id);
+      if (!sec) return;
+      if (!sec.classList.contains('open')) sec.classList.add('open');
+      var br = body.getBoundingClientRect();
+      var top = body.scrollTop + (sec.getBoundingClientRect().top - br.top) - 2;
+      if (body.scrollTo) body.scrollTo({ top: top, behavior: 'smooth' });
+      else body.scrollTop = top;
+      setActive(id);
+    });
+    var tick = 0;
+    body.addEventListener('scroll', function(){
+      if (tick) return;
+      tick = requestAnimationFrame(function(){ tick = 0; syncActive(); });
+    }, { passive: true });
+  }
+
   return { esc: esc, render: render, plainText: plainText, SECTIONS: SECTIONS, last: function(){ return last; } };
 })();
 </script>
@@ -3547,14 +3650,15 @@ var UI = (function(){
    ============================================================ */
 var History = (function(){
   /* 键名用运行期拼接，避免任何非 ASCII 字符混入。
-     v8.6 起历史记录写入新键 delta_blackroom_history_v86；
+     v8.7 起历史记录写入新键 delta_blackroom_history_v87（时长单位改为小时，旧记录按 60 折算）；
      OLD_KEYS 同时兼容 v8.5 / v8.4 及更早版本（v85/v6/v3 与含省略号字符的旧键），
      首次加载自动把旧记录按 id 去重合并进新键（新键已有记录时也合并），
      旧键原样保留作备份，保证同设备升级、以及「旧版导出 JSON → 新版导入」都不丢历史。 */
-  var KEY = ['delta','blackroom','history','v86'].join('_');
-  var MIGRATED_KEY = ['delta','blackroom','history','migrated','v86'].join('_');
+  var KEY = ['delta','blackroom','history','v87'].join('_');
+  var MIGRATED_KEY = ['delta','blackroom','history','migrated','v87'].join('_');
   var ELL = String.fromCharCode(0x2026);
   var OLD_KEYS = [
+    ['delta','blackroom','history','v86'].join('_'),
     ['delta','blackroom','history','v85'].join('_'),
     ['delta','blackroom','history','v6'].join('_'),
     ['delta','blackroom','history','v3'].join('_'),
@@ -3590,6 +3694,14 @@ var History = (function(){
      缺结论字段的旧记录按当前算法补算（与导入逻辑共用），保证筛选与趋势有数可用。 */
   function normalizeRec(x){
     if (!x || typeof x !== 'object' || !x.input) return null;
+    /* 单位迁移：v8.7 起时长唯一单位＝小时。早于该版本的记录里 playTime 是分钟、
+       avgTime 也是分钟，必须先折算再交给 analyze，否则旧记录会被放大 60 倍。 */
+    if (x.tu !== 'h'){
+      if (typeof x.input.playTime === 'number') x.input.playTime = Number((x.input.playTime / 60).toFixed(2));
+      else if (typeof x.input.playTime === 'string' && x.input.playTime.trim() !== '') x.input.playTime = Number((Number(x.input.playTime) / 60).toFixed(2));
+      if (typeof x.avgTime === 'number') x.avgTime = Number((x.avgTime / 60).toFixed(2));
+      x.tu = 'h';
+    }
     if (typeof x.risk !== 'number' || !x.verdictKey){
       if (typeof Analyzer === 'undefined') return null;
       try{
@@ -3667,7 +3779,7 @@ var History = (function(){
       mode: result.mode ? result.mode.name : '', season: data.seasonPhase || 'mid', squad: data.squadType || 'solo',
       fbase: Number(result.fbase.value.toFixed(2)), drop: Number(result.drop.finalMult.toFixed(2)),
       red: Number(result.drop.red.toFixed(3)), gold: Number(result.drop.gold.toFixed(2)),
-      avgTime: d.avgTime == null ? null : Number(d.avgTime.toFixed(1)),
+      avgTime: d.avgTime == null ? null : Number(d.avgTime.toFixed(2)), tu: 'h',
       hourly: d.yieldMh == null ? null : Number(d.yieldMh.toFixed(2)),
       perGame: d.perGameM == null ? null : Number(d.perGameM.toFixed(2)),
       games: d.n || null, dimC: result.dimCalibratedCount,
@@ -3832,7 +3944,7 @@ var History = (function(){
   function rowHtml(it){
     var seg = [it.verdict || it.pool || '—'];
     seg.push('高压 ' + fmt(it.pressure,0) + ' / 低爆 ' + fmt(it.suppress,0) + ' / 阈值 ' + fmt(has(it.th) ? it.th : 58, 0));
-    if (has(it.avgTime)) seg.push('每局 ' + it.avgTime + ' 分');
+    if (has(it.avgTime)) seg.push('每局 ' + it.avgTime + ' 小时');
     if (has(it.hourly)) seg.push('效率 ' + it.hourly + ' M/h');
     seg.push('F_base ' + fmt(it.fbase,2) + ' · 爆率 ' + fmt(it.drop,2,'×') + ' · 红品 ' + fmt(it.red,3,'%'));
     var tags = [];
@@ -4354,7 +4466,7 @@ var History = (function(){
         ['模式 / 标签', (it.mode || '—') + ' / ' + (it.label || '—')],
         ['F_base / 爆率', it.fbase.toFixed(2) + ' / ' + it.drop.toFixed(2) + '×'],
         ['红品', (it.red != null ? it.red.toFixed(3) + '%' : '—')],
-        ['每局 / 效率', (it.avgTime != null ? it.avgTime + '分' : '—') + ' / ' + (it.hourly != null ? it.hourly + 'M/h' : '—')],
+        ['每局 / 效率', (it.avgTime != null ? it.avgTime + '小时' : '—') + ' / ' + (it.hourly != null ? it.hourly + 'M/h' : '—')],
         ['硬触发 / 翻转', (it.trig || 0) + ' 项 / ' + (it.flip != null ? it.flip + '%' : '—')]
       ];
       return '<div class="cmp-col"><div class="h">' + tag + '</div>' +
@@ -4497,7 +4609,7 @@ var SimView = (function(){
     { k:'evacRate',      n:'撤离率',       u:'%',  min:2,  max:95,   step:0.5,  g:'收益与行为', hint:'临界 35%：超过即按「稳定盈利」压爆率；25–33% 为最优带' },
     { k:'profitRatio',   n:'赚损比',       u:'M',  min:0.2,max:6,    step:0.05, g:'收益与行为', hint:'正常档 0.8–1.5M，≥2.0M 触发锁爆率' },
     { k:'extractValue',  n:'带出价值',     u:'M',  min:1,  max:2000, step:1,    g:'收益与行为', hint:'与在线时长共同决定收益效率 M/h' },
-    { k:'playTime',      n:'在线时长',     u:'分', min:60, max:40000,step:10,   g:'收益与行为', hint:'拉长时长＝摊薄效率，同时抬高每局时长' },
+    { k:'playTime',      n:'在线时长',     u:'小时', min:1, max:700, step:1,  g:'收益与行为', hint:'拉长时长＝摊薄效率，同时抬高每局时长' },
     { k:'totalGames',    n:'战局数',       u:'局', min:10, max:3000, step:1,    g:'收益与行为', hint:'样本量直接决定判定阈值松紧' },
     { k:'gearValue',     n:'入场战备',     u:'万', min:1,  max:400,  step:1,    g:'收益与行为', hint:'分房第一门槛；≥78 万进高战备档' },
     { k:'kdSecret',      n:'机密战损比',   u:'',   min:0.1,max:8,    step:0.05, g:'战斗表现',   hint:'v4.4 起只抬高压轴，不再压爆率（社区拆解称已辟谣（未获官方证实），2026-10 复核维持）' },
@@ -4716,7 +4828,7 @@ var SimView = (function(){
     /* 派生量 */
     var dv = cur.derived;
     q('sim-derived').innerHTML =
-      kp('每局时长', f2(dv.avgTime,1), '分') + kp('收益效率', f2(dv.yieldMh,2), 'M/h') +
+      kp('每局时长', f2(dv.avgTime,2), '小时') + kp('收益效率', f2(dv.yieldMh,2), 'M/h') +
       kp('场均带出', f2(dv.perGameM,2), 'M') + kp('主模式KD', f2(dv.kdMain,2), '') +
       kp('F_base', cur.fbase.value.toFixed(2), '', cur.fbase.tier) +
       kp('输入覆盖率', Math.round(cur.coverage*100), '%');
@@ -4824,7 +4936,7 @@ var SimView = (function(){
   var SEL_IDS = ['seasonPhase','mainMode','squadType','recentGames','feltExperience'];
   var DIM_IDS = ['dimCombat','dimWealth','dimSearch','dimCoop','dimSurvival'];
   var DIM_KEYS = { dimCombat:'combat', dimWealth:'wealth', dimSearch:'search', dimCoop:'coop', dimSurvival:'survival' };
-  var RANGES = { hitRate:[0,100], precisionRate:[0,100], evacRate:[0,100], totalGames:[0,5000], playTime:[0,100000],
+  var RANGES = { hitRate:[0,100], precisionRate:[0,100], evacRate:[0,100], totalGames:[0,5000], playTime:[0,720],
                  gearValue:[0,2000], profitRatio:[0,50], extractValue:[0,20000], totalReward:[0,20000],
                  kdSecret:[0,50], kdTopSecret:[0,50], teammateValue:[0,20000], rescueCount:[0,5000] };
   var DRAFT_KEY = ['delta','blackroom','draft','v6'].join('_');
@@ -5177,7 +5289,7 @@ var SimView = (function(){
       window.toast && window.toast('五维已复原为「未标定」');
     });
     q('btnPreset').addEventListener('click', function(){
-      var p = { profitRatio:'1.15', extractValue:'286', totalReward:'96', totalGames:'268', playTime:'5360',
+      var p = { profitRatio:'1.15', extractValue:'286', totalReward:'96', totalGames:'268', playTime:'89.3',
                 kdSecret:'1.24', kdTopSecret:'0.86', hitRate:'29.4', precisionRate:'38.2', evacRate:'33.6',
                 teammateValue:'18.5', rescueCount:'72', gearValue:'26' };
       for (var k in p) q(k).value = p[k];
@@ -5289,7 +5401,7 @@ var SimView = (function(){
     insight:  '历史分析',
     sim:      '爆率模拟'
   };
-  var BASE_TITLE = '三角洲行动 · 黑屋匹配推测系统 v8.6';
+  var BASE_TITLE = '三角洲行动 · 黑屋匹配推测系统 v8.7';
   var current = 'analysis';
 
   function q(id){ return document.getElementById(id); }
