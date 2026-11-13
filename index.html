@@ -5,22 +5,32 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2315181b' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='24' height='24' rx='5' fill='%23ffffff' stroke='none'/%3E%3Cpath d='M4 18V10l4-3 4 3v8'/%3E%3Cpath d='M12 14h8v4'/%3E%3Cpath d='M16 14v-3'/%3E%3C/svg%3E">
-<title>三角洲行动 · 黑屋匹配推测系统 v8.7</title>
+<title>三角洲行动 · 黑屋匹配推测系统 v8.8</title>
 <meta name="description" content="《三角洲行动》S12 赛季黑屋匹配推测与爆率分析工具，完全本地运行。">
 <style>
 /* ============================================================
    三角洲行动 · 黑屋匹配推测系统
-   设计系统：中性浅色 / 同心圆角 / 多层柔和阴影 / 统一线性图标
+   组件系统：shadcn 令牌体系 + Sidebar / Card / Tabs / Input 分层
+   视觉基调：中性浅色 / 同心圆角 / 多层柔和阴影 / 统一线性图标
    ------------------------------------------------------------
    约定
    1. 颜色只走语义令牌，禁止在组件内硬编码色值（#fff/#000 除外）
-   2. 圆角同心：外层半径 = 内层半径 + 内边距（24-16=8 / 12-4=8）
-   3. 间距只用 4/8/12/16/24/32/48 七档
-   4. 所有数字使用等宽数字（tabular-nums），避免数值跳动时位移
-   5. 不使用装饰性渐变、发光、emoji 与感叹号
+   2. 圆角同心：外层半径 = 内层半径 + 内边距（24-16=8 / 20-12=8）
+      卡片与侧栏共用同一组值，移动端同步降为 20/12
+   3. 间距只用 4/8/12/16/24/32/48 七档（--space-1..7）
+   4. 字号只用 8 档（--text-2xs..2xl），禁止裸 px 字号
+   5. 所有数字使用等宽数字（tabular-nums），避免数值跳动时位移
+   6. 不使用装饰性渐变、发光、emoji 与感叹号
    ============================================================ */
 
-/* ---------- 1. 令牌 ---------- */
+/* ---------- 1. 令牌（shadcn component system） ----------
+   规范表（组件只允许引用这里的变量，不得再写裸 px）
+   ┌ 字号     2xs 10 / xs 11 / sm 12 / base 13 / md 14 / lg 17 / xl 22 / 2xl 26
+   ├ 间距     1 4 / 2 8 / 3 12 / 4 16 / 5 24 / 6 32 / 7 48
+   ├ 圆角     sm 6 / md 8 / lg 10 / xl 12 / panel-sm 20 / panel 24 / pill
+   │          panel = md(8) + padding(16)，panel-sm = md(8) + padding(12)
+   └ 图标     xs 12 / nav 13 / md 15 / lg 19（导航图标 13 < 文字 14）
+   ------------------------------------------------------------ */
 :root{
   /* 中性灰阶：底色略暗于面板，靠明度差分层，不靠边框 */
   --bg:#e9ecf0;
@@ -52,23 +62,75 @@
   --info:#2f4179;
   --info-bg:#e8ecf5;
 
-  /* 圆角：固定档位 */
-  --r-1:6px;
-  --r-2:8px;
-  --r-3:10px;
-  --r-4:12px;
-  --r-6:20px;
-  --r-7:24px;
+  /* shadcn 语义别名：值一律指向上面既有色板，配色零改动 */
+  --background:var(--bg);
+  --foreground:var(--ink);
+  --card:var(--panel);
+  --card-foreground:var(--ink);
+  --popover:var(--panel);
+  --muted:var(--panel-2);
+  --muted-foreground:var(--ink-3);
+  --accent:var(--panel-3);
+  --accent-foreground:var(--ink);
+  --border:var(--line);
+  --input:var(--field-line);
+  --ring:var(--ink);
+  --primary:var(--ink);
+  --primary-foreground:#ffffff;
+
+  /* 间距：4 的倍数七档，组件间只走这几档 */
+  --space-1:4px;
+  --space-2:8px;
+  --space-3:12px;
+  --space-4:16px;
+  --space-5:24px;
+  --space-6:32px;
+  --space-7:48px;
+  /* 兼容别名：v8.7 及更早的组件继续引用 --s-* */
+  --s-1:var(--space-1);
+  --s-2:var(--space-2);
+  --s-3:var(--space-3);
+  --s-4:var(--space-4);
+  --s-5:var(--space-5);
+  --s-6:var(--space-6);
+  --s-7:var(--space-7);
+
+  /* 字号：8 档固定梯度 */
+  --text-2xs:10px;
+  --text-xs:11px;
+  --text-sm:12px;
+  --text-base:13px;
+  --text-md:14px;
+  --text-lg:17px;
+  --text-xl:22px;
+  --text-2xl:26px;
+
+  /* 图标：统一线性图标梯度 */
+  --icon-xs:12px;
+  --icon-nav:13px;
+  --icon-md:15px;
+  --icon-lg:19px;
+
+  /* 圆角：shadcn 单一 --radius 基准，其余全部推导 */
+  --radius:8px;
+  --radius-sm:calc(var(--radius) - 2px);                     /*  6 */
+  --radius-md:var(--radius);                                /*  8 */
+  --radius-lg:calc(var(--radius) + 2px);                    /* 10 */
+  --radius-xl:calc(var(--radius) + 4px);                    /* 12 */
+  /* 同心：外半径 = 内层半径 + 内边距，圆心对齐 */
+  --radius-panel-sm:calc(var(--radius-md) + var(--space-3)); /* 20 = 8 + 12 */
+  --radius-panel:calc(var(--radius-md) + var(--space-4));    /* 24 = 8 + 16 */
+  --r-1:var(--radius-sm);
+  --r-2:var(--radius-md);
+  --r-3:var(--radius-lg);
+  --r-4:var(--radius-xl);
+  --r-6:var(--radius-panel-sm);
+  --r-7:var(--radius-panel);
   --r-pill:999px;
 
-  /* 间距：固定档位 */
-  --s-1:4px;
-  --s-2:8px;
-  --s-3:12px;
-  --s-4:16px;
-  --s-5:24px;
-  --s-6:32px;
-  --s-7:48px;
+  /* 侧栏：与 topbar 共用同一列宽，保证标题与菜单项左缘对齐 */
+  --sidebar-w:216px;
+  --nav-icon-box:20px;
 
   /* 多层柔和阴影：替代实线边框 */
   --sh-1:0 1px 2px rgba(14,17,22,.07);
@@ -88,7 +150,7 @@
 html{-webkit-text-size-adjust:100%}
 body{
   font-family:var(--font);
-  font-size:14px;
+  font-size:var(--text-md);
   line-height:1.6;
   color:var(--ink-2);
   background:var(--bg);
@@ -107,39 +169,48 @@ a{color:var(--info);text-decoration:none}
 .grow{flex:1}
 .num,.mono,.n,.v,.vv,.hs-v,.hscore,.meta,.dt{font-family:var(--mono);font-variant-numeric:tabular-nums}
 
-/* ---------- 2. 骨架 ---------- */
+/* ---------- 2. 骨架（shadcn Sidebar + Header） ----------
+   topbar 与 stage 使用同一 --sidebar-w 列定义：
+   列一 = 品牌 / 侧栏，列二 = 页面大标题 / 内容。
+   品牌图标盒与菜单图标盒同宽，二者左缘及文字左缘严格对齐。
+   所有面板：圆角 = 内层半径(--radius-md 8) + 内边距(--space-4 16) = 24。
+   ------------------------------------------------------------ */
 .app{
-  max-width:1120px;
+  max-width:1280px;
   margin:0 auto;
-  padding:0 var(--s-5) calc(var(--s-7) + env(safe-area-inset-bottom));
+  padding:0 var(--space-6) calc(var(--space-7) + env(safe-area-inset-bottom));
 }
 
-/* 透明顶栏：无实心底色，与页面背景连续 */
+/* 透明顶栏：三列网格，前两列与 stage 对齐 */
 .topbar{
-  display:flex;
+  display:grid;
+  grid-template-columns:var(--sidebar-w) minmax(0,1fr) auto;
+  gap:var(--space-6);
   align-items:center;
-  justify-content:space-between;
-  gap:var(--s-4);
-  padding:var(--s-5) 0 var(--s-4);
+  padding:var(--space-5) 0 var(--space-4);
 }
-.brand{display:flex;align-items:center;gap:var(--s-3);min-width:0}
+/* 28 = 侧栏 padding 16 + 菜单项 padding 12 */
+.topbar-brand{min-width:0;padding-left:calc(var(--space-4) + var(--space-3))}
+.topbar-main{min-width:0;display:flex;align-items:center}
+.topbar-meta{display:flex;align-items:center;gap:var(--space-2);flex:0 0 auto;justify-content:flex-end}
+
+.brand{display:flex;align-items:center;gap:var(--space-3);min-width:0}
 .brand-mark{
   display:grid;place-items:center;
-  width:34px;height:34px;flex:0 0 auto;
-  border-radius:var(--r-2);
+  width:var(--nav-icon-box);height:var(--nav-icon-box);flex:0 0 auto;
+  border-radius:var(--radius-md);
   background:var(--panel);
   box-shadow:var(--sh-2);
   color:var(--ink);
 }
-.brand-mark svg{width:19px;height:19px;display:block}
+.brand-mark svg{width:var(--icon-md);height:var(--icon-md);display:block}
 .brand-tx{display:flex;flex-direction:column;min-width:0}
-.brand-tx b{font-size:14.5px;font-weight:600;color:var(--ink);letter-spacing:.01em;line-height:1.35}
-.brand-tx i{font-size:11.5px;font-style:normal;color:var(--ink-3);line-height:1.4;letter-spacing:.04em}
-.topbar-meta{display:flex;align-items:center;gap:var(--s-2);flex:0 0 auto}
+.brand-tx b{font-size:var(--text-md);font-weight:600;color:var(--ink);letter-spacing:.01em;line-height:1.35}
+.brand-tx i{font-size:var(--text-xs);font-style:normal;color:var(--ink-3);line-height:1.4;letter-spacing:.04em}
 
 /* 状态标签：无边框、无描边徽章感 */
 .tag{
-  font-size:11.5px;
+  font-size:var(--text-xs);
   letter-spacing:.03em;
   color:var(--ink-2);
   background:var(--panel);
@@ -150,104 +221,100 @@ a{color:var(--info);text-decoration:none}
 }
 .tag-quiet{background:transparent;box-shadow:none;color:var(--ink-3);padding-left:2px;padding-right:2px}
 
-/* 主体：左内容 + 右竖轨（贴右） */
+/* 主网格：侧栏 | 内容。没有空列，没有虚拟列间距 */
 .stage{
   display:grid;
-  grid-template-columns:minmax(0,1fr) auto;
-  gap:var(--s-6);
+  grid-template-columns:var(--sidebar-w) minmax(0,1fr);
+  gap:var(--space-6);
   align-items:start;
 }
-.main{min-width:0;position:relative}
+/* position:relative 让视图退场动画的 absolute 定位锚在内容列内 */
+.main{grid-column:2;min-width:0;position:relative}
 
-/* 页面大标题：标明当前位置 */
-.page-head{padding:var(--s-2) 0 var(--s-5)}
-.page-head h1{
-  font-size:26px;
+/* 页面大标题：位于 topbar 列二，与卡片左缘同线 */
+.page-title{
+  font-size:var(--text-2xl);
   font-weight:600;
   letter-spacing:-.015em;
   color:var(--ink);
   line-height:1.25;
-  /* 标题均衡换行：末行不留单个词 */
   text-wrap:balance;
 }
-.page-sub{
-  margin-top:var(--s-2);
-  font-size:13px;
-  color:var(--ink-3);
-  max-width:46ch;
-  text-wrap:pretty;
-}
 
-/* 右侧竖轨：融入背景，未选中仅图标 */
+/* shadcn Sidebar：左侧 sticky 面板，圆角/内边距与 .card 完全一致 */
 .rail{
-  position:fixed;
-  right:var(--s-5);
-  top:50%;
-  transform:translateY(-50%);
+  grid-column:1;
+  position:sticky;
+  top:var(--space-5);
   z-index:80;
-  display:flex;
-  flex-direction:column;
-  gap:var(--s-1);
-  padding:var(--s-2);
-  border-radius:var(--r-4);
-  background:transparent;
+  padding:var(--space-4);
+  border-radius:var(--r-7);
+  background:var(--panel);
+  box-shadow:var(--sh-2);
 }
+.rail-content{display:flex;flex-direction:column}
+/* 同组收紧（4px），组间加大（24px），不用分隔线 */
+.rail-group{display:flex;flex-direction:column;gap:var(--space-1)}
+.rail-group + .rail-group{margin-top:var(--space-5)}
+
 .rail-item{
   display:flex;
   align-items:center;
   justify-content:flex-start;
-  gap:var(--s-2);
-  min-height:44px;
-  padding:11px 12px;
-  border-radius:var(--r-2);
+  gap:var(--space-3);
+  width:100%;
+  min-height:48px;
+  padding:var(--space-3);
+  border-radius:var(--radius-md);
   color:var(--ink-3);
   transition:background .26s var(--ease), color .26s var(--ease);
   white-space:nowrap;
   overflow:hidden;
 }
-.rail-ic{display:grid;place-items:center;width:20px;height:20px;flex:0 0 auto}
+/* 图标盒与品牌图标盒等宽；svg 13px < 文字 14px */
+.rail-ic{display:grid;place-items:center;width:var(--nav-icon-box);height:var(--nav-icon-box);flex:0 0 auto}
 .rail-ic svg{
-  width:20px;height:20px;display:block;
+  width:var(--icon-nav);height:var(--icon-nav);display:block;
   transition:transform .34s var(--ease-out), opacity .34s var(--ease-out), filter .34s var(--ease-out);
 }
-/* 未选中：图标轻微收缩 + 极淡模糊，切换时与新项交叉淡化 */
-.rail-item:not(.on) .rail-ic svg{transform:scale(.92);opacity:.66;filter:blur(.2px)}
+/* 未选中：仅轻微收缩与降权；13px 线性图标不做模糊，保证可辨 */
+.rail-item:not(.on) .rail-ic svg{transform:scale(.96);opacity:.82;filter:none}
 .rail-item:hover{background:var(--panel-3);color:var(--ink-2)}
 .rail-item:hover .rail-ic svg{opacity:.9;filter:none;transform:scale(1)}
-/* 选中：常显名称，图标清晰 */
-.rail-item.on{background:var(--panel);color:var(--ink);box-shadow:var(--sh-2)}
+.rail-item.on{background:var(--bg-sunken);color:var(--ink);box-shadow:var(--sh-1)}
 .rail-item.on .rail-ic svg{transform:scale(1);opacity:1;filter:none}
 .rail-tx{
-  font-size:13px;
+  font-size:var(--text-md);
   font-weight:500;
   line-height:1.4;
-  max-width:0;
-  opacity:0;
+  /* 桌面常显；移动端在断点内覆盖为「仅选中展开」 */
+  max-width:88px;
+  opacity:1;
   overflow:hidden;
-  transform:translateX(-3px);
-  transition:max-width .34s var(--ease-out), opacity .28s var(--ease-out), transform .34s var(--ease-out);
+  color:var(--ink-3);
+  transition:color .26s var(--ease), max-width .34s var(--ease-out), opacity .28s var(--ease-out);
 }
-.rail-item.on .rail-tx{max-width:88px;opacity:1;transform:none}
+.rail-item.on .rail-tx{color:var(--ink);font-weight:600}
 .rail-cnt{
   font-family:var(--mono);
-  font-size:10.5px;
+  font-size:var(--text-2xs);
   color:var(--ink-4);
-  max-width:0;
-  opacity:0;
+  max-width:40px;
+  opacity:1;
   overflow:hidden;
+  margin-left:auto;
   transition:max-width .3s var(--ease-out), opacity .3s var(--ease-out);
 }
-.rail-item.on .rail-cnt{max-width:40px;opacity:1}
 
 .footer{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:var(--s-3);
+  gap:var(--space-3);
   flex-wrap:wrap;
-  margin-top:var(--s-7);
-  padding-top:var(--s-5);
-  font-size:11.5px;
+  margin-top:var(--space-7);
+  padding-top:var(--space-5);
+  font-size:var(--text-xs);
   color:var(--ink-4);
 }
 .footer .src{color:var(--ink-4);opacity:.85}
@@ -270,7 +337,7 @@ a{color:var(--info);text-decoration:none}
 }
 /* 同类面板标题左缘统一对齐 */
 .card-hd h2{
-  font-size:13.5px;
+  font-size:var(--text-base);
   font-weight:600;
   color:var(--ink);
   letter-spacing:.01em;
@@ -279,13 +346,13 @@ a{color:var(--info);text-decoration:none}
   text-wrap:balance;
 }
 .hd-act{display:flex;align-items:center;gap:var(--s-2);flex-wrap:wrap}
-.hd-sub{font-size:12.5px;color:var(--ink-3);font-family:var(--mono)}
+.hd-sub{font-size:var(--text-sm);color:var(--ink-3);font-family:var(--mono)}
 
 .mini-hd{
   display:flex;
   align-items:baseline;
   gap:var(--s-2);
-  font-size:12px;
+  font-size:var(--text-sm);
   font-weight:600;
   color:var(--ink-2);
   letter-spacing:.02em;
@@ -294,7 +361,7 @@ a{color:var(--info);text-decoration:none}
 .card > .mini-hd:first-of-type,.card-hd + .mini-hd{margin-top:0}
 .mini-hd .q{
   font-family:var(--font);
-  font-size:11.5px;
+  font-size:var(--text-xs);
   font-weight:400;
   color:var(--ink-4);
   letter-spacing:0;
@@ -309,7 +376,7 @@ a{color:var(--info);text-decoration:none}
   margin-bottom:var(--s-3);
 }
 .fgroup-hd .name{
-  font-size:12px;
+  font-size:var(--text-sm);
   font-weight:600;
   color:var(--ink-3);
   letter-spacing:.06em;
@@ -327,7 +394,7 @@ a{color:var(--info);text-decoration:none}
 
 .field{display:flex;flex-direction:column;gap:6px;min-width:0;position:relative}
 .field > label{
-  font-size:11.5px;
+  font-size:var(--text-xs);
   font-weight:500;
   color:var(--ink-3);
   letter-spacing:.02em;
@@ -345,7 +412,7 @@ a{color:var(--info);text-decoration:none}
   width:100%;
   min-height:40px;
   padding:9px 12px;
-  font-size:13px;
+  font-size:var(--text-base);
   color:var(--ink);
   background:var(--field-bg);
   border:none;
@@ -369,7 +436,7 @@ select.ctrl{
   background-position:right 10px center;
   cursor:pointer;
 }
-.ctrl-sm{min-height:32px;padding:5px 28px 5px 10px;font-size:12px;width:auto}
+.ctrl-sm{min-height:32px;padding:5px 28px 5px 10px;font-size:var(--text-sm);width:auto}
 input[type=number]{-moz-appearance:textfield}
 input[type=number]::-webkit-outer-spin-button,
 input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
@@ -381,7 +448,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
   top:50%;
   transform:translateY(-50%);
   margin-top:11px;
-  font-size:11.5px;
+  font-size:var(--text-xs);
   color:var(--ink-4);
   pointer-events:none;
   font-family:var(--mono);
@@ -412,7 +479,7 @@ input[type=range]::-moz-range-track{height:3px;border-radius:var(--r-pill);backg
 input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid var(--ink);border-radius:50%;background:var(--panel)}
 
 .hint{
-  font-size:11.5px;
+  font-size:var(--text-xs);
   line-height:1.65;
   color:var(--ink-4);
   margin-top:var(--s-2);
@@ -429,7 +496,7 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
   gap:6px;
   min-height:36px;
   padding:7px 14px;
-  font-size:12.5px;
+  font-size:var(--text-sm);
   font-weight:500;
   color:var(--ink-2);
   background:var(--panel);
@@ -440,7 +507,7 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
 }
 .btn:hover{background:var(--panel-2);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line-2), var(--sh-2)}
 .btn:active{transform:translateY(.5px)}
-.btn.tiny{min-height:30px;padding:5px 11px;font-size:12px;border-radius:var(--r-2)}
+.btn.tiny{min-height:30px;padding:5px 11px;font-size:var(--text-sm);border-radius:var(--r-2)}
 .btn.ghost{box-shadow:none;background:transparent;color:var(--ink-3);padding-left:8px;padding-right:8px}
 .btn.ghost:hover{background:var(--panel-3);color:var(--ink);box-shadow:none}
 .btn.danger{background:var(--danger-bg);color:var(--danger);box-shadow:none}
@@ -450,7 +517,7 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
 .btn.warn{background:var(--warn-bg);color:var(--warn);box-shadow:none}
 .btn.on,.btn.is-on{background:var(--ink);color:#fff;box-shadow:none}
 .btn.on:hover,.btn.is-on:hover{background:#2a2f34;color:#fff}
-.btn svg{width:15px;height:15px;flex:0 0 auto}
+.btn svg{width:var(--icon-md);height:var(--icon-md);flex:0 0 auto}
 .btn:disabled{opacity:.45;cursor:not-allowed}
 .btn-row{display:flex;align-items:center;gap:var(--s-2);flex-wrap:wrap;margin-top:var(--s-3)}
 
@@ -463,7 +530,7 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
   width:100%;
   min-height:50px;
   margin-top:var(--s-2);
-  font-size:14.5px;
+  font-size:var(--text-md);
   font-weight:600;
   letter-spacing:.02em;
   color:#fff;
@@ -490,7 +557,7 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
   align-items:center;
   gap:var(--s-2);
   margin-top:var(--s-3);
-  font-size:11.5px;
+  font-size:var(--text-xs);
   color:var(--ink-4);
   min-height:18px;
 }
@@ -509,7 +576,7 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
   background:var(--panel-2);
   border-radius:var(--r-4);
   box-shadow:inset 0 0 0 1px var(--line);
-  font-size:11.5px;
+  font-size:var(--text-xs);
   color:var(--ink-3);
 }
 .pf-k{flex:0 0 auto;letter-spacing:.02em}
@@ -545,13 +612,13 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
   transition:background .2s var(--ease);
 }
 .dim-row.is-set{background:#f2f5f8;box-shadow:inset 0 0 0 1px var(--line)}
-.dim-row > label{font-size:12px;color:var(--ink-2);font-weight:500;letter-spacing:.02em}
+.dim-row > label{font-size:var(--text-sm);color:var(--ink-2);font-weight:500;letter-spacing:.02em}
 .dim-num{
   width:100%;
   min-height:28px;
   padding:3px 7px;
   font-family:var(--mono);
-  font-size:12px;
+  font-size:var(--text-sm);
   text-align:center;
   color:var(--ink);
   background:var(--field-bg);
@@ -563,7 +630,7 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
 .dim-num:hover{background:#fff;box-shadow:inset 0 0 0 1px var(--field-line-hover)}
 .dim-num:focus{outline:none;background:#fff;box-shadow:0 0 0 2px var(--ink)}
 .dim-row .unset{
-  font-size:10.5px;
+  font-size:var(--text-2xs);
   color:var(--ink-4);
   letter-spacing:.02em;
   text-align:right;
@@ -571,7 +638,7 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
 }
 .dim-row.is-set .unset{color:var(--ok);opacity:1}
 .dim-row.is-set .unset::after{content:""}
-.dim-note{font-size:11.5px;color:var(--ink-4);margin-top:var(--s-3);line-height:1.6}
+.dim-note{font-size:var(--text-xs);color:var(--ink-4);margin-top:var(--s-3);line-height:1.6}
 
 /* ---------- 8. 筛选 / 标签 ---------- */
 .filters{margin-top:var(--s-2)}
@@ -579,7 +646,7 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
 .chip{
   min-height:30px;
   padding:5px 12px;
-  font-size:12px;
+  font-size:var(--text-sm);
   color:var(--ink-3);
   background:transparent;
   border-radius:var(--r-pill);
@@ -592,7 +659,7 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
 .mtag{
   display:inline-flex;
   align-items:center;
-  font-size:10.5px;
+  font-size:var(--text-2xs);
   letter-spacing:.02em;
   color:var(--ink-3);
   background:var(--panel-3);
@@ -618,7 +685,7 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
   min-width:0;
 }
 .hs-v{
-  font-size:17px;
+  font-size:var(--text-lg);
   font-weight:600;
   color:var(--ink);
   line-height:1.3;
@@ -628,8 +695,8 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
 .hs-v.wn,.hs-v.warn{color:var(--warn)}
 .hs-v.ok{color:var(--ok)}
 .hs-v.info{color:var(--info)}
-.hs-v .n{font-size:10px;color:var(--ink-4);margin-left:2px;font-weight:400}
-.hs-k{font-size:10.5px;color:var(--ink-4);margin-top:2px;letter-spacing:.02em}
+.hs-v .n{font-size:var(--text-2xs);color:var(--ink-4);margin-left:2px;font-weight:400}
+.hs-k{font-size:var(--text-2xs);color:var(--ink-4);margin-top:2px;letter-spacing:.02em}
 
 /* KPI（历史分析 / 模拟） */
 .kpis{
@@ -644,10 +711,10 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
   border-radius:var(--r-3);
   min-width:0;
 }
-.kpi .k{font-size:10.5px;color:var(--ink-4);letter-spacing:.02em;line-height:1.4}
+.kpi .k{font-size:var(--text-2xs);color:var(--ink-4);letter-spacing:.02em;line-height:1.4}
 .kpi .v{
   margin-top:3px;
-  font-size:17px;
+  font-size:var(--text-lg);
   font-weight:600;
   color:var(--ink);
   line-height:1.3;
@@ -657,7 +724,7 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
 .kpi .v.wn,.kpi .v.warn{color:var(--warn)}
 .kpi .v.ok{color:var(--ok)}
 .kpi .v.info{color:var(--info)}
-.kpi .u{font-size:10px;color:var(--ink-3);margin-left:3px;font-weight:400}
+.kpi .u{font-size:var(--text-2xs);color:var(--ink-3);margin-left:3px;font-weight:400}
 
 /* ---------- 10. 图表 ---------- */
 .chart-box{
@@ -676,7 +743,7 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
   gap:var(--s-4);
   flex-wrap:wrap;
   margin-top:var(--s-3);
-  font-size:11px;
+  font-size:var(--text-xs);
   color:var(--ink-3);
 }
 .chart-lg span{display:inline-flex;align-items:center;gap:5px}
@@ -691,7 +758,7 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
   padding:var(--s-1) var(--s-2);
   -webkit-overflow-scrolling:touch;
 }
-.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl{width:100%;border-collapse:collapse;font-size:var(--text-sm)}
 .tbl th,.tbl td{
   padding:8px 10px;
   text-align:left;
@@ -699,7 +766,7 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
   border-bottom:1px solid var(--line);
 }
 .tbl thead th{
-  font-size:10.5px;
+  font-size:var(--text-2xs);
   font-weight:500;
   color:var(--ink-4);
   letter-spacing:.04em;
@@ -712,7 +779,7 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
 .tbl td.ok{color:var(--ok)}
 .tbl .last{text-align:right}
 .tbl td.concl{font-weight:500;color:var(--ink)}
-.tbl tr[data-secrow] td{padding-top:2px;font-size:11px;color:var(--ink-4)}
+.tbl tr[data-secrow] td{padding-top:2px;font-size:var(--text-xs);color:var(--ink-4)}
 .tbl th.last{text-align:right}
 
 /* ---------- 12. 列表行 ---------- */
@@ -736,7 +803,7 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
 .hck{display:grid;place-items:center}
 .hck input{width:15px;height:15px;accent-color:var(--ink);cursor:pointer}
 .hscore{
-  font-size:15px;
+  font-size:var(--text-md);
   font-weight:600;
   text-align:right;
   color:var(--ink-2);
@@ -751,12 +818,12 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
   align-items:baseline;
   gap:var(--s-2);
   flex-wrap:wrap;
-  font-size:12.5px;
+  font-size:var(--text-sm);
   color:var(--ink);
   line-height:1.45;
 }
-.ht .dt{font-size:11px;color:var(--ink-4)}
-.hm{font-size:11.5px;color:var(--ink-3);margin-top:1px;line-height:1.5}
+.ht .dt{font-size:var(--text-xs);color:var(--ink-4)}
+.hm{font-size:var(--text-xs);color:var(--ink-3);margin-top:1px;line-height:1.5}
 .htags{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px}
 .hops{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
 
@@ -764,13 +831,13 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
 .empty{
   padding:var(--s-6) var(--s-4);
   text-align:center;
-  font-size:12.5px;
+  font-size:var(--text-sm);
   color:var(--ink-4);
   line-height:1.9;
 }
 .empty-t{
   display:block;
-  font-size:13px;
+  font-size:var(--text-base);
   font-weight:600;
   color:var(--ink-3);
   margin-bottom:6px;
@@ -793,11 +860,11 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
   width:20px;height:20px;flex:0 0 auto;
   border-radius:var(--r-1);
   background:var(--panel-3);
-  font-size:10.5px;
+  font-size:var(--text-2xs);
   color:var(--ink-3);
 }
-.sec-hd h3{font-size:12.5px;font-weight:600;color:var(--ink);margin-right:auto;letter-spacing:.01em}
-.sec-hd .sub{font-size:11px;color:var(--ink-4);white-space:nowrap;flex:0 0 auto}
+.sec-hd h3{font-size:var(--text-sm);font-weight:600;color:var(--ink);margin-right:auto;letter-spacing:.01em}
+.sec-hd .sub{font-size:var(--text-xs);color:var(--ink-4);white-space:nowrap;flex:0 0 auto}
 /* 折叠指示箭头：必须限定尺寸，否则 svg 会撑满整行 */
 .sec-hd .cv{width:15px;height:15px;flex:0 0 auto;color:var(--ink-4);transition:transform .26s var(--ease)}
 .sec.open .sec-hd .cv{transform:rotate(180deg)}
@@ -808,16 +875,16 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
   grid-template-columns:96px minmax(0,1fr);
   gap:var(--s-3);
   padding:6px 0;
-  font-size:12.5px;
+  font-size:var(--text-sm);
   line-height:1.65;
 }
-.sec-row > .k{color:var(--ink-4);font-size:11.5px}
+.sec-row > .k{color:var(--ink-4);font-size:var(--text-xs)}
 
 .line-item{
   position:relative;
   padding:9px 12px 9px 14px;
   margin:6px 0;
-  font-size:12.5px;
+  font-size:var(--text-sm);
   line-height:1.7;
   color:var(--ink-2);
   background:var(--panel-2);
@@ -840,7 +907,7 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
 .line-item.warn::before{background:var(--warn)}
 .line-item b{color:inherit;font-weight:600}
 .line-item .mute,.mute{color:var(--ink-4)}
-.line-item .src{display:block;margin-top:3px;font-size:11px;color:var(--ink-4)}
+.line-item .src{display:block;margin-top:3px;font-size:var(--text-xs);color:var(--ink-4)}
 
 /* ---------- 14. 判定块 ---------- */
 .verdict{
@@ -854,21 +921,21 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
 .verdict.sev-ok{background:var(--ok-bg)}
 .verdict.sev-info{background:var(--info-bg)}
 .vt{
-  font-size:10.5px;
+  font-size:var(--text-2xs);
   letter-spacing:.1em;
   color:var(--ink-4);
   margin-bottom:var(--s-2);
   text-transform:uppercase;
 }
 .vh{display:flex;align-items:center;gap:var(--s-2);flex-wrap:wrap;margin-bottom:var(--s-2)}
-.vk{font-size:19px;font-weight:600;color:var(--ink);letter-spacing:-.015em;line-height:1.3;text-wrap:balance}
-.vp{font-size:12.5px;color:var(--ink-2);line-height:1.6}
+.vk{font-size:var(--text-lg);font-weight:600;color:var(--ink);letter-spacing:-.015em;line-height:1.3;text-wrap:balance}
+.vp{font-size:var(--text-sm);color:var(--ink-2);line-height:1.6}
 .vp b{color:var(--ink);font-weight:600}
 .vbadges{display:flex;gap:5px;flex-wrap:wrap;margin:var(--s-3) 0}
 .b{
   display:inline-flex;
   align-items:center;
-  font-size:11px;
+  font-size:var(--text-xs);
   font-family:var(--mono);
   letter-spacing:.01em;
   padding:3px 8px;
@@ -882,16 +949,16 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
 .b.danger{color:var(--danger);background:#fff}
 .b.info{color:var(--info);background:#fff}
 .b.mute{color:var(--ink-3);background:rgba(255,255,255,.55)}
-.vsum{font-size:12.5px;color:var(--ink-2);line-height:1.75;text-wrap:pretty}
+.vsum{font-size:var(--text-sm);color:var(--ink-2);line-height:1.75;text-wrap:pretty}
 .vsum b{color:var(--ink);font-weight:600}
 
 /* ---------- 15. 两轴 ---------- */
 .axes{display:grid;gap:var(--s-3);margin-bottom:var(--s-3)}
 .axis{padding:var(--s-3);background:var(--panel-2);border-radius:var(--r-3)}
 .axis-hd{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s-2);margin-bottom:var(--s-2)}
-.axis-hd .t{font-size:12px;font-weight:500;color:var(--ink-2)}
-.axis-hd .n{font-size:15px;font-weight:600;color:var(--ink);font-family:var(--mono)}
-.axis-hd .n small{font-size:10px;color:var(--ink-4);font-weight:400}
+.axis-hd .t{font-size:var(--text-sm);font-weight:500;color:var(--ink-2)}
+.axis-hd .n{font-size:var(--text-md);font-weight:600;color:var(--ink);font-family:var(--mono)}
+.axis-hd .n small{font-size:var(--text-2xs);color:var(--ink-4);font-weight:400}
 .axis-hd .n.dg,.axis-hd .n.danger{color:var(--danger)}
 .axis-hd .n.wn,.axis-hd .n.warn{color:var(--warn)}
 .axis-hd .n.ok{color:var(--ok)}
@@ -919,9 +986,9 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
 .axis-track .th::after{
   content:attr(data-l);
   position:absolute;bottom:calc(100% + 3px);left:50%;transform:translateX(-50%);
-  font-size:9.5px;color:var(--ink-4);white-space:nowrap;font-family:var(--mono);
+  font-size:var(--text-2xs);color:var(--ink-4);white-space:nowrap;font-family:var(--mono);
 }
-.axis .note{font-size:11.5px;color:var(--ink-3);line-height:1.6;margin-top:4px;text-wrap:pretty}
+.axis .note{font-size:var(--text-xs);color:var(--ink-3);line-height:1.6;margin-top:4px;text-wrap:pretty}
 
 /* ---------- 16. 驱动条 ---------- */
 .drv{
@@ -931,18 +998,18 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
   gap:var(--s-2);
   padding:7px 0;
   border-bottom:1px solid var(--line);
-  font-size:12px;
+  font-size:var(--text-sm);
 }
 .drv:last-of-type{border-bottom:none}
-.drv .rk{font-family:var(--mono);font-size:10.5px;color:var(--ink-4);text-align:center}
+.drv .rk{font-family:var(--mono);font-size:var(--text-2xs);color:var(--ink-4);text-align:center}
 .drv.t1 .rk,.drv.t2 .rk{color:var(--ink-2);font-weight:600}
 .drv .nm{color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .drv .bar{height:5px;border-radius:var(--r-pill);background:var(--line);overflow:hidden}
 .drv .bar i{display:block;height:100%;border-radius:var(--r-pill);background:var(--ink-2);transition:width .5s var(--ease-out)}
-.drv .vv{font-family:var(--mono);font-size:11.5px;color:var(--ink);text-align:right;font-weight:500}
+.drv .vv{font-family:var(--mono);font-size:var(--text-xs);color:var(--ink);text-align:right;font-weight:500}
 .drv .lb{
   grid-column:2 / -1;
-  font-size:10.5px;
+  font-size:var(--text-2xs);
   color:var(--ink-4);
   line-height:1.5;
   margin-top:-2px;
@@ -969,7 +1036,7 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
   min-width:0;
   height:100%;
 }
-.dist .col .n{font-family:var(--mono);font-size:10px;color:var(--ink-3);line-height:1}
+.dist .col .n{font-family:var(--mono);font-size:var(--text-2xs);color:var(--ink-3);line-height:1}
 .dist .col .bar{
   width:100%;
   max-width:34px;
@@ -980,7 +1047,7 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
 .dist .col.ok .bar{background:var(--ok)}
 .dist .col.warn .bar{background:var(--warn)}
 .dist .col.danger .bar{background:var(--danger)}
-.dist .col .x{font-family:var(--mono);font-size:9.5px;color:var(--ink-4);line-height:1;height:12px}
+.dist .col .x{font-family:var(--mono);font-size:var(--text-2xs);color:var(--ink-4);line-height:1;height:12px}
 
 /* ---------- 18. 对比 ---------- */
 .cmp{
@@ -995,8 +1062,8 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
   border-radius:var(--r-3);
   min-width:0;
 }
-.cmp-col h4{font-size:11px;font-weight:500;color:var(--ink-4);letter-spacing:.04em;margin-bottom:6px}
-.cmp-col .big{font-size:15px;font-weight:600;color:var(--ink);line-height:1.35;text-wrap:balance}
+.cmp-col h4{font-size:var(--text-xs);font-weight:500;color:var(--ink-4);letter-spacing:.04em;margin-bottom:6px}
+.cmp-col .big{font-size:var(--text-md);font-weight:600;color:var(--ink);line-height:1.35;text-wrap:balance}
 .cmp-delta{margin-top:var(--s-3)}
 .cmp-row{
   display:grid;
@@ -1005,12 +1072,12 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
   align-items:center;
   padding:6px 0;
   border-bottom:1px solid var(--line);
-  font-size:12px;
+  font-size:var(--text-sm);
 }
 .cmp-row:last-child{border-bottom:none}
-.cmp-row .k{color:var(--ink-3);font-size:11.5px}
+.cmp-row .k{color:var(--ink-3);font-size:var(--text-xs)}
 .cmp-row .v{font-family:var(--mono);color:var(--ink-2);text-align:right}
-.cmp-row .d{font-family:var(--mono);font-size:11px;text-align:right}
+.cmp-row .d{font-family:var(--mono);font-size:var(--text-xs);text-align:right}
 .cmp-row .d.up{color:var(--danger)}
 .cmp-row .d.down{color:var(--ok)}
 
@@ -1027,9 +1094,9 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
   margin-bottom:6px;
   flex-wrap:wrap;
 }
-.sim-row-h label{font-size:12.5px;color:var(--ink-2);font-weight:500;margin-right:auto}
-.sim-val{font-family:var(--mono);font-size:13px;color:var(--ink);font-weight:600;min-width:44px;text-align:right}
-.sim-delta{font-family:var(--mono);font-size:11px;color:var(--ink-4);min-width:44px;text-align:right}
+.sim-row-h label{font-size:var(--text-sm);color:var(--ink-2);font-weight:500;margin-right:auto}
+.sim-val{font-family:var(--mono);font-size:var(--text-base);color:var(--ink);font-weight:600;min-width:44px;text-align:right}
+.sim-delta{font-family:var(--mono);font-size:var(--text-xs);color:var(--ink-4);min-width:44px;text-align:right}
 .sim-delta.up{color:var(--danger)}
 .sim-delta.down{color:var(--ok)}
 .sim-track{position:relative}
@@ -1048,7 +1115,7 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
   justify-content:flex-end;
   gap:var(--s-2);
   margin-top:4px;
-  font-size:10.5px;
+  font-size:var(--text-2xs);
   color:var(--ink-4);
   line-height:1.5;
 }
@@ -1058,7 +1125,7 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
 .ins-verdict{margin-top:var(--s-3)}
 .ins-report{
   white-space:pre-wrap;
-  font-size:12px;
+  font-size:var(--text-sm);
   line-height:1.85;
   color:var(--ink-2);
   background:var(--panel-2);
@@ -1075,11 +1142,11 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
   border-radius:var(--r-3);
 }
 .io-hd{display:flex;align-items:center;gap:var(--s-2);margin-bottom:var(--s-2)}
-.io-hd b{font-size:12.5px;color:var(--ink);font-weight:600;margin-right:auto}
+.io-hd b{font-size:var(--text-sm);color:var(--ink);font-weight:600;margin-right:auto}
 .io-text{
   min-height:150px;
   font-family:var(--mono);
-  font-size:11.5px;
+  font-size:var(--text-xs);
   line-height:1.6;
   resize:vertical;
   background:var(--panel);
@@ -1132,8 +1199,8 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
   padding:var(--s-3) var(--s-4) var(--s-3);
   flex:0 0 auto;
 }
-.sheet-hd h2{font-size:14px;font-weight:600;color:var(--ink);letter-spacing:.01em}
-.sheet-hd .meta{font-size:11px;color:var(--ink-4);margin-right:auto}
+.sheet-hd h2{font-size:var(--text-md);font-weight:600;color:var(--ink);letter-spacing:.01em}
+.sheet-hd .meta{font-size:var(--text-xs);color:var(--ink-4);margin-right:auto}
 .sheet-x{
   display:grid;place-items:center;
   width:30px;height:30px;
@@ -1154,7 +1221,7 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
 }
 .anchors button{
   position:relative;
-  font-size:11.5px;
+  font-size:var(--text-xs);
   font-weight:500;
   color:var(--ink-3);
   background:transparent;
@@ -1204,7 +1271,7 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border:1.5px solid va
   align-items:center;
   gap:var(--s-3);
   padding:10px 16px;
-  font-size:12.5px;
+  font-size:var(--text-sm);
   color:#fff;
   background:rgba(21,24,27,.94);
   border-radius:var(--r-pill);
@@ -1256,40 +1323,77 @@ html.ready .view.on > *:nth-child(n+7){transition-delay:150ms}
   transition:opacity .16s var(--ease), transform .16s var(--ease), filter .16s var(--ease);
 }
 
-/* ---------- 24. 响应式 ---------- */
-@media (max-width:1180px){
+/* ---------- 24. 响应式（shadcn 断点） ----------
+   ≥1281 双列满宽 / 1280 表单降列 / 1024 收紧外边距
+   ≤900  侧栏移到顶部横条，stage 单列 —— 彻底消除空列与列间距造成的右侧留白
+   ≤640 / ≤430 表单与明细行细化
+   ------------------------------------------------------------ */
+@media (max-width:1280px){
+  .app{padding-left:var(--space-5);padding-right:var(--space-5)}
   .g4{grid-template-columns:repeat(2,minmax(0,1fr))}
   .dim-wrap{grid-template-columns:minmax(0,1fr)}
   .dim-canvas{justify-items:center}
-  .rail{
-    position:fixed;
-    left:50%;
-    right:auto;
-    bottom:calc(var(--s-4) + env(safe-area-inset-bottom));
-    top:auto;
-    transform:translateX(-50%);
-    flex-direction:row;
-    gap:2px;
-    padding:5px;
-    background:var(--panel);
-    box-shadow:var(--sh-4);
-    border-radius:var(--r-pill);
-    z-index:120;
+}
+@media (max-width:1024px){
+  .app{padding-left:var(--space-4);padding-right:var(--space-4)}
+  .topbar,.stage{gap:var(--space-5)}
+  .g3{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+/* 侧栏移到顶部：保留「未选中仅图标 + 悬停提示 / 选中展开名称」的交互 */
+@media (max-width:900px){
+  .app{padding:0 var(--space-4) calc(var(--space-7) + env(safe-area-inset-bottom))}
+  .topbar{
+    grid-template-columns:minmax(0,1fr) auto;
+    gap:var(--space-2) var(--space-3);
+    padding:var(--space-4) 0 var(--space-3);
   }
-  .rail-item{padding:9px 12px;min-height:42px}
-  .rail-item .rail-tx{max-width:0;opacity:0}
-  .rail-item.on .rail-tx{max-width:72px;opacity:1;transform:none}
-  .rail-cnt{display:none}
-  .app{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
+  .topbar-brand{grid-column:1;grid-row:1;padding-left:0}
+  .topbar-meta{grid-column:2;grid-row:1}
+  .topbar-main{grid-column:1 / -1;grid-row:2;padding-top:var(--space-1)}
+  .page-title{font-size:var(--text-xl)}
+
+  /* 单列：main 占满容器宽度，左右留白严格相等 */
+  .stage{display:block}
+  .main{width:100%;max-width:none}
+
+  .rail{
+    position:sticky;
+    top:0;
+    z-index:120;
+    width:fit-content;
+    max-width:100%;
+    margin-bottom:var(--space-4);
+    padding:var(--space-3);
+    border-radius:var(--r-6);        /* 20 = 8 + 12，同心且与卡片一致 */
+    box-shadow:var(--sh-3);
+  }
+  /* 吸顶时遮住圆角下方滚过的内容，避免分组标题贴着导航条 */
+  .rail::after{
+    content:"";
+    position:absolute;
+    left:0;right:0;bottom:-12px;height:12px;
+    background:var(--bg);
+    pointer-events:none;
+  }
+  .rail-content{flex-direction:row;align-items:center;justify-content:flex-start}
+  .rail-group{flex-direction:row;gap:var(--space-1)}
+  .rail-group + .rail-group{margin-top:0;margin-left:var(--space-5)}
+  .rail-item{width:auto;min-height:44px;padding:var(--space-2) var(--space-3);gap:var(--space-2)}
+  .rail-item .rail-tx{max-width:0;opacity:0;transform:translateX(-3px)}
+  .rail-item.on .rail-tx{max-width:72px;opacity:1;transform:none;color:var(--ink)}
+  .rail-cnt{display:none;margin-left:0}
+
+  /* 卡片与侧栏同圆角、同内边距 */
+  .card{padding:var(--space-3);border-radius:var(--r-6)}
 }
 @media (max-width:640px){
-  .app{padding-left:var(--s-4);padding-right:var(--s-4)}
+  .rail{width:100%}
+  .rail-content{justify-content:space-between;width:100%}
+  .rail-group + .rail-group{margin-left:var(--space-3)}
   .g3,.g4{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .page-head h1{font-size:22px}
-  .card{padding:var(--s-3);border-radius:var(--r-6)}
-  .topbar{padding:var(--s-4) 0 var(--s-2)}
   .hs-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .hrow{grid-template-columns:3px 18px 38px minmax(0,1fr);grid-template-areas:"rail ck score body" "ops ops ops ops";row-gap:var(--s-2)}
+  .hrow{grid-template-columns:3px 18px 38px minmax(0,1fr);grid-template-areas:"rail ck score body" "ops ops ops ops";row-gap:var(--space-2)}
   .hrail{grid-area:rail}
   .hck{grid-area:ck}
   .hscore{grid-area:score}
@@ -1301,6 +1405,9 @@ html.ready .view.on > *:nth-child(n+7){transition-delay:150ms}
   .g3,.g4{grid-template-columns:minmax(0,1fr)}
   .dim-row{grid-template-columns:44px minmax(0,1fr) 52px}
   .dim-row .unset{display:none}
+  .rail-group + .rail-group{margin-left:var(--space-2)}
+  .rail-item{padding:var(--space-2)}
+  .topbar-meta{gap:var(--space-1)}
 }
 
 /* 减少动效偏好 */
@@ -1313,33 +1420,66 @@ html.ready .view.on > *:nth-child(n+7){transition-delay:150ms}
 
 /* 模拟基线选择器：按可用宽度自动排列，避免单个控件独占一行 */
 #sim-selects{grid-template-columns:repeat(auto-fit,minmax(168px,1fr))}
-.sim-base{font-size:10.5px}
+.sim-base{font-size:var(--text-2xs)}
 </style>
 </head>
 <body>
 <div class="app">
 
-  <header class="topbar">
-    <div class="brand">
-      <span class="brand-mark" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18V9l5-4 5 4v9"/><path d="M13 13h8v5"/><path d="M17 13V9"/></svg>
-      </span>
-      <span class="brand-tx">
-        <b>黑屋匹配推测</b>
-        <i>三角洲行动</i>
-      </span>
+  <!-- shadcn: sidebar-header 与 sidebar 共用第一网格列 -->
+  <header class="topbar" data-slot="header">
+    <div class="topbar-brand" data-slot="sidebar-header">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18V9l5-4 5 4v9"/><path d="M13 13h8v5"/><path d="M17 13V9"/></svg>
+        </span>
+        <span class="brand-tx">
+          <b>黑屋匹配推测</b>
+          <i>三角洲行动</i>
+        </span>
+      </div>
+    </div>
+    <div class="topbar-main">
+      <h1 class="page-title" id="pageTitle">数据分析</h1>
     </div>
     <div class="topbar-meta">
-      <span class="tag" id="pillSeason">S12 · 微光</span>
-      <span class="tag tag-quiet" id="pillEngine">引擎 v4.6</span>
+      <span data-slot="badge" class="tag" id="pillSeason">S12 · 微光</span>
+      <span data-slot="badge" class="tag tag-quiet" id="pillEngine">引擎 v4.6</span>
     </div>
   </header>
 
-  <div class="stage">
-    <main class="main" id="main">
-      <div class="page-head">
-        <h1 id="pageTitle">数据分析</h1>
-      </div>
+  <div class="stage" data-slot="sidebar-provider">
+
+    <!-- shadcn Sidebar：左侧常驻，分组间距区分职能；未选中仅图标，选中展开名称 -->
+    <aside class="rail" data-slot="sidebar" aria-label="主导航">
+      <nav class="rail-content" data-slot="sidebar-content">
+        <div class="rail-group" data-slot="sidebar-group">
+          <button data-slot="sidebar-menu-button" class="rail-item on" type="button" data-view="analysis" aria-selected="true" title="数据分析">
+            <span class="rail-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V11"/><path d="M10 19V5"/><path d="M16 19v-6"/><path d="M21 19H3"/></svg></span>
+            <span class="rail-tx">数据分析</span>
+          </button>
+        </div>
+        <div class="rail-group" data-slot="sidebar-group">
+          <button data-slot="sidebar-menu-button" class="rail-item" type="button" data-view="history" aria-selected="false" title="历史记录">
+            <span class="rail-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.4"/><path d="M12 7.6V12l3 1.8"/></svg></span>
+            <span class="rail-tx">历史记录</span>
+            <span class="rail-cnt" id="tabHistCount"></span>
+          </button>
+          <button data-slot="sidebar-menu-button" class="rail-item" type="button" data-view="insight" aria-selected="false" title="历史分析">
+            <span class="rail-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 17.5 9 11l4 3.2 7.5-8.7"/><path d="M15 5.5h5.5V11"/></svg></span>
+            <span class="rail-tx">历史分析</span>
+          </button>
+        </div>
+        <div class="rail-group" data-slot="sidebar-group">
+          <button data-slot="sidebar-menu-button" class="rail-item" type="button" data-view="sim" aria-selected="false" title="爆率模拟">
+            <span class="rail-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h10"/><path d="M18 8h2"/><circle cx="16" cy="8" r="2"/><path d="M4 16h6"/><path d="M14 16h6"/><circle cx="12" cy="16" r="2"/></svg></span>
+            <span class="rail-tx">爆率模拟</span>
+          </button>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main" id="main" data-slot="main">
 
   <!-- ============ 数据分析 ============ -->
   <section class="view on" id="view-analysis" role="tabpanel" aria-labelledby="pageTitle">
@@ -1351,7 +1491,7 @@ html.ready .view.on > *:nth-child(n+7){transition-delay:150ms}
       <span class="pf-flag" id="pfFlag">等待录入</span>
     </div>
 
-    <div class="card" id="inputCard">
+    <div data-slot="card" class="card" id="inputCard">
       <div class="card-hd">
         <h2>赛季数据</h2>
         <div class="hd-act">
@@ -1365,7 +1505,7 @@ html.ready .view.on > *:nth-child(n+7){transition-delay:150ms}
         <div class="grid g3">
           <div class="field">
             <label for="seasonPhase">赛季阶段</label>
-            <select id="seasonPhase" class="ctrl">
+            <select id="seasonPhase" data-slot="input" class="ctrl">
               <option value="early">赛季初</option>
               <option value="mid" selected>赛季中</option>
               <option value="late">赛季末</option>
@@ -1373,7 +1513,7 @@ html.ready .view.on > *:nth-child(n+7){transition-delay:150ms}
           </div>
           <div class="field">
             <label for="mainMode">主要模式</label>
-            <select id="mainMode" class="ctrl">
+            <select id="mainMode" data-slot="input" class="ctrl">
               <option value="secret" selected>机密</option>
               <option value="normal">普通</option>
               <option value="topsecret">绝密</option>
@@ -1381,7 +1521,7 @@ html.ready .view.on > *:nth-child(n+7){transition-delay:150ms}
           </div>
           <div class="field">
             <label for="squadType">组队方式</label>
-            <select id="squadType" class="ctrl">
+            <select id="squadType" data-slot="input" class="ctrl">
               <option value="solo" selected>单排为主</option>
               <option value="duo">双排为主</option>
               <option value="trio">三排为主</option>
@@ -1396,22 +1536,22 @@ html.ready .view.on > *:nth-child(n+7){transition-delay:150ms}
         <div class="grid g4">
           <div class="field">
             <label for="profitRatio">赚损比</label>
-            <input class="ctrl has-suffix" type="number" id="profitRatio" step="0.01" inputmode="decimal">
+            <input data-slot="input" class="ctrl has-suffix" type="number" id="profitRatio" step="0.01" inputmode="decimal">
             <span class="unit-suffix">M</span>
           </div>
           <div class="field">
             <label for="extractValue">带出价值</label>
-            <input class="ctrl has-suffix" type="number" id="extractValue" step="0.1" inputmode="decimal">
+            <input data-slot="input" class="ctrl has-suffix" type="number" id="extractValue" step="0.1" inputmode="decimal">
             <span class="unit-suffix">M</span>
           </div>
           <div class="field">
             <label for="totalReward">累计报酬</label>
-            <input class="ctrl has-suffix" type="number" id="totalReward" step="0.1" inputmode="decimal">
+            <input data-slot="input" class="ctrl has-suffix" type="number" id="totalReward" step="0.1" inputmode="decimal">
             <span class="unit-suffix">M</span>
           </div>
           <div class="field">
             <label for="playTime">游戏时长</label>
-            <input class="ctrl has-suffix wide" type="number" id="playTime" step="0.5" inputmode="decimal" min="0" max="720">
+            <input data-slot="input" class="ctrl has-suffix wide" type="number" id="playTime" step="0.5" inputmode="decimal" min="0" max="720">
             <span class="unit-suffix">小时</span>
           </div>
         </div>
@@ -1422,20 +1562,20 @@ html.ready .view.on > *:nth-child(n+7){transition-delay:150ms}
         <div class="grid g4">
           <div class="field">
             <label for="kdSecret">机密战损比</label>
-            <input class="ctrl" type="number" id="kdSecret" step="0.01" inputmode="decimal">
+            <input data-slot="input" class="ctrl" type="number" id="kdSecret" step="0.01" inputmode="decimal">
           </div>
           <div class="field">
             <label for="kdTopSecret">绝密战损比</label>
-            <input class="ctrl" type="number" id="kdTopSecret" step="0.01" inputmode="decimal">
+            <input data-slot="input" class="ctrl" type="number" id="kdTopSecret" step="0.01" inputmode="decimal">
           </div>
           <div class="field">
             <label for="hitRate">命中率</label>
-            <input class="ctrl has-suffix" type="number" id="hitRate" step="0.1" inputmode="decimal">
+            <input data-slot="input" class="ctrl has-suffix" type="number" id="hitRate" step="0.1" inputmode="decimal">
             <span class="unit-suffix">%</span>
           </div>
           <div class="field">
             <label for="precisionRate">精准击败率</label>
-            <input class="ctrl has-suffix" type="number" id="precisionRate" step="0.1" inputmode="decimal">
+            <input data-slot="input" class="ctrl has-suffix" type="number" id="precisionRate" step="0.1" inputmode="decimal">
             <span class="unit-suffix">%</span>
           </div>
         </div>
@@ -1446,22 +1586,22 @@ html.ready .view.on > *:nth-child(n+7){transition-delay:150ms}
         <div class="grid g4">
           <div class="field">
             <label for="evacRate">撤离率</label>
-            <input class="ctrl has-suffix" type="number" id="evacRate" step="0.1" inputmode="decimal">
+            <input data-slot="input" class="ctrl has-suffix" type="number" id="evacRate" step="0.1" inputmode="decimal">
             <span class="unit-suffix">%</span>
           </div>
           <div class="field">
             <label for="gearValue">入场战备</label>
-            <input class="ctrl has-suffix" type="number" id="gearValue" step="1" inputmode="decimal">
+            <input data-slot="input" class="ctrl has-suffix" type="number" id="gearValue" step="1" inputmode="decimal">
             <span class="unit-suffix">万</span>
           </div>
           <div class="field">
             <label for="teammateValue">带出队友价值</label>
-            <input class="ctrl has-suffix" type="number" id="teammateValue" step="0.1" inputmode="decimal">
+            <input data-slot="input" class="ctrl has-suffix" type="number" id="teammateValue" step="0.1" inputmode="decimal">
             <span class="unit-suffix">M</span>
           </div>
           <div class="field">
             <label for="rescueCount">救助队友</label>
-            <input class="ctrl has-suffix" type="number" id="rescueCount" step="1" inputmode="numeric">
+            <input data-slot="input" class="ctrl has-suffix" type="number" id="rescueCount" step="1" inputmode="numeric">
             <span class="unit-suffix">次</span>
           </div>
         </div>
@@ -1472,11 +1612,11 @@ html.ready .view.on > *:nth-child(n+7){transition-delay:150ms}
         <div class="grid g3">
           <div class="field">
             <label for="totalGames">战局数</label>
-            <input class="ctrl" type="number" id="totalGames" step="1" inputmode="numeric">
+            <input data-slot="input" class="ctrl" type="number" id="totalGames" step="1" inputmode="numeric">
           </div>
           <div class="field">
             <label for="recentGames">近期波动</label>
-            <select id="recentGames" class="ctrl">
+            <select id="recentGames" data-slot="input" class="ctrl">
               <option value="no" selected>无明显波动</option>
               <option value="up">数据突然变好</option>
               <option value="down">数据突然变差</option>
@@ -1485,7 +1625,7 @@ html.ready .view.on > *:nth-child(n+7){transition-delay:150ms}
           </div>
           <div class="field">
             <label for="feltExperience">体感出货</label>
-            <select id="feltExperience" class="ctrl">
+            <select id="feltExperience" data-slot="input" class="ctrl">
               <option value="normal" selected>与平时一致</option>
               <option value="worse">明显变差</option>
               <option value="hard">对手明显变强</option>
@@ -1497,7 +1637,7 @@ html.ready .view.on > *:nth-child(n+7){transition-delay:150ms}
       </div>
     </div>
 
-    <div class="card" id="radarCard">
+    <div data-slot="card" class="card" id="radarCard">
       <div class="card-hd">
         <h2>五维能力</h2>
         <div class="hd-act"><button class="btn tiny ghost" type="button" id="btnDimReset">全部复位</button></div>
@@ -1542,7 +1682,7 @@ html.ready .view.on > *:nth-child(n+7){transition-delay:150ms}
       </div>
     </div>
 
-    <button class="btn-main" id="btnAnalyze" type="button" data-primary-action>
+    <button data-slot="button" class="btn-main" id="btnAnalyze" type="button" data-primary-action>
       <span class="spin"></span><span id="btnAnalyzeText">生成推测</span>
     </button>
     <div class="calcbar" id="calcbar">
@@ -1554,7 +1694,7 @@ html.ready .view.on > *:nth-child(n+7){transition-delay:150ms}
 
   <!-- ============ 历史记录 ============ -->
   <section class="view" id="view-history" role="tabpanel">
-    <div class="card">
+    <div data-slot="card" class="card">
       <div class="card-hd">
         <h2>记录</h2>
         <div class="hd-act">
@@ -1575,8 +1715,8 @@ html.ready .view.on > *:nth-child(n+7){transition-delay:150ms}
           <button class="chip" data-v="note" type="button">有备注</button>
         </div>
         <div class="fgrid fg2">
-          <div class="field"><input class="ctrl" id="histKw" type="search" placeholder="搜索标签、模式或日期"></div>
-          <div class="field"><select class="ctrl" id="histSort">
+          <div class="field"><input data-slot="input" class="ctrl" id="histKw" type="search" placeholder="搜索标签、模式或日期"></div>
+          <div class="field"><select data-slot="input" class="ctrl" id="histSort">
             <option value="time">时间倒序</option>
             <option value="riskDesc">风险高到低</option>
             <option value="riskAsc">风险低到高</option>
@@ -1585,13 +1725,13 @@ html.ready .view.on > *:nth-child(n+7){transition-delay:150ms}
           </select></div>
         </div>
         <div class="fgrid fg3">
-          <div class="field"><select class="ctrl" id="histRange">
+          <div class="field"><select data-slot="input" class="ctrl" id="histRange">
             <option value="all">全部时间</option>
             <option value="7">最近 7 天</option>
             <option value="30">最近 30 天</option>
             <option value="90">最近 90 天</option>
           </select></div>
-          <div class="field"><select class="ctrl" id="histMode">
+          <div class="field"><select data-slot="input" class="ctrl" id="histMode">
             <option value="all">全部模式</option>
             <option value="机密">机密</option>
             <option value="普通">普通</option>
@@ -1616,7 +1756,7 @@ html.ready .view.on > *:nth-child(n+7){transition-delay:150ms}
             <button class="btn tiny ghost" type="button" id="btnIoClose">收起</button>
           </div>
           <div class="hint" id="ioNote"></div>
-          <textarea id="ioText" class="ctrl io-text" spellcheck="false"></textarea>
+          <textarea id="ioText" data-slot="input" class="ctrl io-text" spellcheck="false"></textarea>
           <div class="btn-row">
             <button class="btn tiny on" type="button" id="btnIoCopy">复制</button>
             <button class="btn tiny" type="button" id="btnIoApply">应用</button>
@@ -1634,11 +1774,11 @@ html.ready .view.on > *:nth-child(n+7){transition-delay:150ms}
       </div>
     </div>
 
-    <div class="card">
+    <div data-slot="card" class="card">
       <div class="card-hd">
         <h2>风险趋势</h2>
         <div class="hd-act">
-          <select class="ctrl ctrl-sm" id="trendMetric">
+          <select data-slot="input" class="ctrl ctrl-sm" id="trendMetric">
             <option value="risk">综合风险</option>
             <option value="pressure">高压轴</option>
             <option value="suppress">低爆轴</option>
@@ -1651,7 +1791,7 @@ html.ready .view.on > *:nth-child(n+7){transition-delay:150ms}
       <div class="hint c" id="trendHint"></div>
     </div>
 
-    <div class="card">
+    <div data-slot="card" class="card">
       <div class="card-hd">
         <h2>明细</h2>
         <div class="hd-act"><button class="btn tiny ghost" type="button" id="btnMore">加载更多</button></div>
@@ -1663,13 +1803,13 @@ html.ready .view.on > *:nth-child(n+7){transition-delay:150ms}
 
   <!-- ============ 历史分析 ============ -->
   <section class="view" id="view-insight" role="tabpanel">
-    <div class="card" id="insightOverview">
+    <div data-slot="card" class="card" id="insightOverview">
       <div class="card-hd"><h2>聚合总览</h2></div>
       <div class="kpis" id="insKpis"></div>
       <div id="insVerdictText" class="ins-verdict"></div>
     </div>
 
-    <div class="card">
+    <div data-slot="card" class="card">
       <div class="card-hd"><h2>分布与差异</h2></div>
       <div class="mini-hd">综合风险分布</div>
       <div class="dist" id="insDist"></div>
@@ -1682,17 +1822,17 @@ html.ready .view.on > *:nth-child(n+7){transition-delay:150ms}
       <div id="insCorr"></div>
     </div>
 
-    <div class="card">
+    <div data-slot="card" class="card">
       <div class="card-hd"><h2>两次记录对比</h2></div>
       <div class="fgrid fg2">
-        <div class="field"><label for="cmpA">记录 A</label><select class="ctrl" id="cmpA"></select></div>
-        <div class="field"><label for="cmpB">记录 B</label><select class="ctrl" id="cmpB"></select></div>
+        <div class="field"><label for="cmpA">记录 A</label><select data-slot="input" class="ctrl" id="cmpA"></select></div>
+        <div class="field"><label for="cmpB">记录 B</label><select data-slot="input" class="ctrl" id="cmpB"></select></div>
       </div>
       <div class="cmp" id="cmpBox"></div>
       <div id="cmpDelta" class="cmp-delta"></div>
     </div>
 
-    <div class="card">
+    <div data-slot="card" class="card">
       <div class="card-hd">
         <h2>诊断报告</h2>
         <div class="hd-act"><button class="btn tiny ghost" type="button" id="btnCopyInsight">复制</button></div>
@@ -1703,11 +1843,11 @@ html.ready .view.on > *:nth-child(n+7){transition-delay:150ms}
 
   <!-- ============ 爆率模拟 ============ -->
   <section class="view" id="view-sim" role="tabpanel">
-    <div class="card">
+    <div data-slot="card" class="card">
       <div class="card-hd">
         <h2>模拟基线</h2>
         <div class="hd-act">
-          <select class="ctrl ctrl-sm" id="sim-sel"></select>
+          <select data-slot="input" class="ctrl ctrl-sm" id="sim-sel"></select>
           <button class="btn tiny ghost" type="button" id="sim-resync">取当前录入</button>
           <button class="btn tiny ghost" type="button" id="sim-reset">回到基线</button>
         </div>
@@ -1718,19 +1858,19 @@ html.ready .view.on > *:nth-child(n+7){transition-delay:150ms}
       <div class="hint" id="sim-touched"></div>
     </div>
 
-    <div class="card">
+    <div data-slot="card" class="card">
       <div class="card-hd"><h2>调节变量</h2></div>
       <div id="sim-sliders"></div>
     </div>
 
-    <div class="card">
+    <div data-slot="card" class="card">
       <div class="card-hd"><h2>实时判定</h2></div>
       <div id="sim-verdict"></div>
       <div class="mini-hd">基线对比</div>
       <div id="sim-compare"></div>
     </div>
 
-    <div class="card">
+    <div data-slot="card" class="card">
       <div class="card-hd"><h2>响应曲线</h2><span class="hd-sub" id="sim-curve-name"></span></div>
       <div class="chart-box"><canvas id="sim-curve"></canvas></div>
       <div class="chart-lg" id="sim-legend"></div>
@@ -1739,26 +1879,6 @@ html.ready .view.on > *:nth-child(n+7){transition-delay:150ms}
   </section>
 
     </main>
-
-    <nav class="rail" aria-label="主导航">
-      <button class="rail-item on" type="button" data-view="analysis" aria-selected="true" title="数据分析">
-        <span class="rail-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V11"/><path d="M10 19V5"/><path d="M16 19v-6"/><path d="M21 19H3"/></svg></span>
-        <span class="rail-tx">数据分析</span>
-      </button>
-      <button class="rail-item" type="button" data-view="history" aria-selected="false" title="历史记录">
-        <span class="rail-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.4"/><path d="M12 7.6V12l3 1.8"/></svg></span>
-        <span class="rail-tx">历史记录</span>
-        <span class="rail-cnt" id="tabHistCount"></span>
-      </button>
-      <button class="rail-item" type="button" data-view="insight" aria-selected="false" title="历史分析">
-        <span class="rail-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 17.5 9 11l4 3.2 7.5-8.7"/><path d="M15 5.5h5.5V11"/></svg></span>
-        <span class="rail-tx">历史分析</span>
-      </button>
-      <button class="rail-item" type="button" data-view="sim" aria-selected="false" title="爆率模拟">
-        <span class="rail-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h10"/><path d="M18 8h2"/><circle cx="16" cy="8" r="2"/><path d="M4 16h6"/><path d="M14 16h6"/><circle cx="12" cy="16" r="2"/></svg></span>
-        <span class="rail-tx">爆率模拟</span>
-      </button>
-    </nav>
   </div>
 
   <footer class="footer">
@@ -1768,8 +1888,8 @@ html.ready .view.on > *:nth-child(n+7){transition-delay:150ms}
 </div>
 
 <!-- ============ 报告面板 ============ -->
-<div class="overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
-  <div class="sheet" id="sheet">
+<div data-slot="sheet-overlay" class="overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+  <div data-slot="sheet" class="sheet" id="sheet">
     <div class="sheet-grip"></div>
     <div class="sheet-hd">
       <h2 id="sheetTitle">推测报告</h2>
@@ -1778,7 +1898,7 @@ html.ready .view.on > *:nth-child(n+7){transition-delay:150ms}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
       </button>
     </div>
-    <div class="anchors" id="sheetAnchors"></div>
+    <div data-slot="tabs" class="anchors" id="sheetAnchors"></div>
     <div class="sheet-body" id="sheetBody"></div>
     <div class="sheet-ft">
       <button class="btn tiny ghost" type="button" id="btnCopyReport">复制</button>
@@ -1796,7 +1916,9 @@ html.ready .view.on > *:nth-child(n+7){transition-delay:150ms}
 /* ============================================================
    SECTION: analysis engine v6 (纯逻辑，无 DOM 依赖，可单独测试)
    ------------------------------------------------------------
-   三角洲行动 · 黑屋匹配推测引擎 v4.6 / 系统 v8.7
+   三角洲行动 · 黑屋匹配推测引擎 v4.6 / 系统 v8.8
+   v8.8（2026-11）：组件系统按 shadcn 令牌与 Sidebar 分层重构，仅改排版，
+   推测逻辑、判定阈值、爆率参数与配色全部沿用 v8.7，未作任何调整。
    v4.6（2026-11）：时长唯一单位改为「小时」——playTime 直接为总小时数，
    avgTime 为单局小时数；所有时长阈值改用小时表达，原始分钟口径仅存于注释。
    在 v4.4（2026-09 社区拆解口径重标）之上的 v4.5（S12 口径）改动：
@@ -2551,7 +2673,7 @@ var Analyzer = (function(){
     var sb = seasonBasis(now);
 
     var out = {
-      version:'v4.6', engine:'v8.7',
+      version:'v4.6', engine:'v8.8',
       seasonBasis: sb,
       pressure: Math.round(pressure), suppress: Math.round(suppress), composite: Math.round(composite),
       verdictKey: vKey, verdict: vName, pool: pool, poolTone: poolTone, sev: sev,
@@ -3538,7 +3660,7 @@ var UI = (function(){
   /* 纯文本报告（复制用） */
   function plainText(data, r){
     var dv = r.derived, L = [];
-    L.push('三角洲行动 · 黑屋匹配推测（v8.7 / 引擎 ' + r.version + ' / ' + (r.seasonBasis ? r.seasonBasis.label : 'S12') + '）');
+    L.push('三角洲行动 · 黑屋匹配推测（v8.8 / 引擎 ' + r.version + ' / ' + (r.seasonBasis ? r.seasonBasis.label : 'S12') + '）');
     L.push('时间：' + new Date().toLocaleString('zh-CN'));
     L.push('判定：' + r.verdict + '｜匹配池：' + r.pool);
     L.push('综合 ' + r.composite + '（阈值 ' + r.thresholds.hi.toFixed(0) + '，边缘 ' + r.thresholds.mid.toFixed(0) + '）｜高压轴 ' + r.pressure + '｜低爆轴 ' + r.suppress);
@@ -5401,7 +5523,7 @@ var SimView = (function(){
     insight:  '历史分析',
     sim:      '爆率模拟'
   };
-  var BASE_TITLE = '三角洲行动 · 黑屋匹配推测系统 v8.7';
+  var BASE_TITLE = '三角洲行动 · 黑屋匹配推测系统 v8.8';
   var current = 'analysis';
 
   function q(id){ return document.getElementById(id); }
